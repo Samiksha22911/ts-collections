@@ -9,6 +9,10 @@ import {
   HashSet,
   HashMap,
   LinkedQueue,
+  LinkedDeque,
+  PriorityQueue,
+  TreeMap,
+  TreeSet,
   // Validation utilities
   validateSafe,
   createValidator,
@@ -69,6 +73,53 @@ const queue = new LinkedQueue<Task>({
 
 queue.offer(validTask);   // ✓
 queue.offer(invalidTask); // ✗ Throws TypeError
+```
+
+### LinkedDeque
+
+```typescript
+const deque = new LinkedDeque<string>();
+
+deque.addFirst('middle');
+deque.addFirst('front');
+deque.addLast('back');
+
+deque.pollFirst(); // 'front'
+deque.pollLast();  // 'back'
+```
+
+### PriorityQueue
+
+```typescript
+const queue = new PriorityQueue<number>();
+queue.offer(5);
+queue.offer(1);
+queue.offer(3);
+
+queue.poll(); // 1
+queue.peek(); // 3
+```
+
+### TreeMap
+
+```typescript
+const map = new TreeMap<string, number>();
+map.put('c', 3);
+map.put('a', 1);
+map.put('b', 2);
+
+map.keys(); // ['a', 'b', 'c']
+```
+
+### TreeSet
+
+```typescript
+const set = new TreeSet<number>();
+set.add(3);
+set.add(1);
+set.add(2);
+
+set.toArray(); // [1, 2, 3]
 ```
 
 ## Complex Types
