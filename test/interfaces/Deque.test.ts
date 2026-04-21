@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { Deque } from "../../src/interfaces";
 
 /**
@@ -119,7 +119,9 @@ export function describeDeque(createDeque: () => Deque<number>): void {
 
       it("should enforce default type validation", () => {
         deque.addFirst(1);
-        expect(() => deque.addLast("text" as unknown as number)).toThrow(TypeError);
+        expect(() => deque.addLast("text" as unknown as number)).toThrow(
+          TypeError,
+        );
       });
     });
   });

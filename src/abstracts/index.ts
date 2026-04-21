@@ -4,9 +4,9 @@
  */
 
 export { AbstractCollection } from "./AbstractCollection";
+export { AbstractDeque } from "./AbstractDeque";
 export { AbstractList } from "./AbstractList";
-export { AbstractSet } from "./AbstractSet";
 export { AbstractMap } from "./AbstractMap";
 export { AbstractQueue } from "./AbstractQueue";
-export { AbstractDeque } from "./AbstractDeque";
+export { AbstractSet } from "./AbstractSet";
 export { AbstractStack } from "./AbstractStack";

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { LinkedDeque } from "../../src/queue/LinkedDeque";
 import { describeDeque } from "../interfaces/Deque.test";
 

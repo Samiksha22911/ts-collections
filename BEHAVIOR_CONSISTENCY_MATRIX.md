@@ -120,20 +120,42 @@
 | `offer` / `poll` queue compatibility | FIFO via front removal | `offer` maps to back insertion |
 | iteration order | Front to back | Deterministic |
 
-### I-2 PriorityQueue
-- Comparator contract
-- Equal-priority tie behavior
-- Peek/poll semantics on empty queue
+### I-2 PriorityQueue (`PriorityQueue`)
 
-### I-3 TreeMap
-- Comparator and ordering contract
-- Key replacement semantics
-- Ordered iteration guarantees
+| Behavior Area | Policy | Notes |
+|---|---|---|
+| default ordering | Min-heap for comparable primitives | number/string/bigint/boolean/Date |
+| custom ordering | Supported via comparator | comparator in constructor options |
+| non-primitive without comparator | Throw when comparison is required | Error: comparator required |
+| `offer` | Returns `true` | Unbounded implementation |
+| `poll` on empty | No throw | Returns `undefined` |
+| `peek` on empty | No throw | Returns `undefined` |
+| `element` on empty | Throw | `Queue is empty` |
+| `toArray` / `iterator` ordering | Priority order snapshot | Deterministic sorted view |
 
-### I-4 TreeSet
-- Comparator and ordering contract
-- Duplicate semantics in sorted context
-- Ordered iteration guarantees
+### I-3 TreeMap (`TreeMap`)
+
+| Behavior Area | Policy | Notes |
+|---|---|---|
+| key ordering | Sorted by comparator | Default comparator supports primitive/date keys |
+| custom ordering | Supported via comparator | comparator in constructor options |
+| comparator equality (`cmp === 0`) | Replace existing entry | Size unchanged |
+| `get`/`remove` missing key | No throw | Returns `undefined` |
+| non-primitive keys without comparator | Throw when comparison is required | Error: comparator required |
+| `keys`/`entries` ordering | Sorted key order | Deterministic |
+| iterator ordering (`keyIterator`/`valueIterator`) | Key-sorted traversal | Deterministic |
+
+### I-4 TreeSet (`TreeSet`)
+
+| Behavior Area | Policy | Notes |
+|---|---|---|
+| element ordering | Sorted by comparator | Default comparator supports primitive/date values |
+| custom ordering | Supported via comparator | comparator in constructor options |
+| duplicate handling | Comparator equality (`cmp === 0`) blocks duplicates | `add` returns `false` |
+| non-primitive values without comparator | Throw when comparison is required | Error: comparator required |
+| `remove` missing element | No throw | Returns `false` |
+| iterator / `toArray` ordering | Sorted order | Deterministic |
+| `removeAll` / `retainAll` | Explicitly implemented | Contract-consistent boolean result |
 
 ---
 

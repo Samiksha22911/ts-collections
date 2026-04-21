@@ -1,7 +1,10 @@
-import type { Iterator } from "../interfaces/Iterator";
+import {
+  AbstractDeque,
+  type TypeValidationOptions,
+} from "../abstracts/AbstractDeque";
 import type { Deque } from "../interfaces/Deque";
+import type { Iterator } from "../interfaces/Iterator";
 import { LinkedList } from "../list/LinkedList";
-import { AbstractDeque, type TypeValidationOptions } from "../abstracts/AbstractDeque";
 
 /**
  * A linked list-based Deque implementation.
