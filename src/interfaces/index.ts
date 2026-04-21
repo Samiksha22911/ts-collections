@@ -8,4 +8,5 @@ export type { List } from "./List";
 export type { Set } from "./Set";
 export type { Map } from "./Map";
 export type { Queue } from "./Queue";
+export type { Deque } from "./Deque";
 export type { Stack } from "./Stack";

@@ -9,3 +9,5 @@ export { describeList } from "./List.test";
 export { describeSet } from "./Set.test";
 export { describeMap } from "./Map.test";
 export { describeQueue } from "./Queue.test";
+export { describeDeque } from "./Deque.test";
+export { describeStack } from "./Stack.test";

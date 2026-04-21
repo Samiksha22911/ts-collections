@@ -96,13 +96,14 @@
 
 // Core Interfaces
 export type {
-  Iterator,
-  Collection,
-  List,
-  Set,
-  Map,
-  Queue,
-  Stack,
+	Collection,
+	Iterator,
+	List,
+	Map,
+	Queue,
+	Deque,
+	Set,
+	Stack,
 } from "./interfaces";
 
 // Type Validation Options (Zod-based)
@@ -111,26 +112,27 @@ export type { MapTypeValidationOptions } from "./abstracts/AbstractMap";
 
 // Validation Utilities
 export {
-  validateSafe,
-  createValidator,
-  createUnionValidator,
-  getSchemaDescription,
-  createTransformingValidator,
-  formatValidationError,
-  type ValidationResult,
-  type ValidationError,
-  type ValidationIssue,
-  type SchemaType,
+	validateSafe,
+	createValidator,
+	createUnionValidator,
+	getSchemaDescription,
+	createTransformingValidator,
+	formatValidationError,
+	type ValidationResult,
+	type ValidationError,
+	type ValidationIssue,
+	type SchemaType,
 } from "./utils/validation";
 
 // Abstract Base Classes
 export {
-  AbstractCollection,
-  AbstractList,
-  AbstractSet,
-  AbstractMap,
-  AbstractQueue,
-  AbstractStack,
+	AbstractCollection,
+	AbstractList,
+	AbstractSet,
+	AbstractMap,
+	AbstractQueue,
+	AbstractDeque,
+	AbstractStack,
 } from "./abstracts";
 
 // Concrete Implementations
@@ -139,4 +141,5 @@ export { LinkedList } from "./list/LinkedList";
 export { HashSet } from "./set/HashSet";
 export { HashMap } from "./map/HashMap";
 export { LinkedQueue } from "./queue/LinkedQueue";
+export { LinkedDeque } from "./queue/LinkedDeque";
 export { LinkedStack } from "./stack/LinkedStack";
