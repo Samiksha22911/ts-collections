@@ -1,13 +1,13 @@
 <div align="center">
   <h1>ts-collections</h1>
   <p><strong>A robust, type-safe collections framework for TypeScript</strong></p>
-  
+
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-3178C6?logo=typescript)](https://www.typescriptlang.org/)
   [![npm version](https://img.shields.io/npm/v/ts-collections.svg?style=flat)](https://www.npmjs.com/package/ts-collections)
   [![Vitest](https://img.shields.io/badge/Vitest-tested-6E9F18?logo=vitest)](https://vitest.dev/)
   ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=Karelaking.ts-collections)
-  
+
   <p>
     <a href="#-features">Features</a> •
     <a href="#-quick-start">Quick Start</a> •
@@ -50,7 +50,7 @@ set.add("unique");
 ### 🔒 Automatic Type Safety
 Runtime type checking enabled by default - no configuration needed. Works just like Java's type-safe collections.
 
-### 🎯 Zero Configuration  
+### 🎯 Zero Configuration
 Type safety works out of the box. No need to learn validation libraries or configure schemas.
 
 ### ☕ Java-Friendly
@@ -456,6 +456,8 @@ pnpm docs
 ## 🧪 Testing
 
 All implementations have comprehensive test coverage (332/332 tests passing).
+
+Test files live under the `test/` directory and mirror the `src/` structure.
 
 ```bash
 # Run all tests
