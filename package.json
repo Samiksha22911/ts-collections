@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./ArrayList": {
+      "types": "./dist/ArrayList.d.ts",
+      "import": "./dist/ArrayList.js"
     }
   },
   "scripts": {
