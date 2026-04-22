@@ -4,7 +4,7 @@ import {
 } from "../abstracts/AbstractSet";
 import type { Collection } from "../interfaces/Collection";
 import type { Iterator } from "../interfaces/Iterator";
-import type { Set as SetInterface } from "../interfaces/Set";
+import type { NavigableSet } from "../interfaces/NavigableSet";
 
 export interface TreeSetOptions<T> extends TypeValidationOptions<T> {
   comparator?: (a: T, b: T) => number;
@@ -17,7 +17,7 @@ export interface TreeSetOptions<T> extends TypeValidationOptions<T> {
  *
  * @template T The type of elements in this set
  */
-export class TreeSet<T> extends AbstractSet<T> implements SetInterface<T> {
+export class TreeSet<T> extends AbstractSet<T> implements NavigableSet<T> {
   private readonly comparator: (a: T, b: T) => number;
   private readonly orderedValues: T[] = [];
 
@@ -90,6 +90,150 @@ export class TreeSet<T> extends AbstractSet<T> implements SetInterface<T> {
     return [...this.orderedValues];
   }
 
+  first(): T {
+    if (this.orderedValues.length === 0) {
+      throw new Error("Set is empty");
+    }
+    return this.valueAt(0);
+  }
+
+  last(): T {
+    if (this.orderedValues.length === 0) {
+      throw new Error("Set is empty");
+    }
+    return this.valueAt(this.orderedValues.length - 1);
+  }
+
+  pollFirst(): T | undefined {
+    if (this.orderedValues.length === 0) {
+      return undefined;
+    }
+    const value = this.orderedValues.shift();
+    if (this.orderedValues.length === 0) {
+      this.resetTypeInference();
+    }
+    return value;
+  }
+
+  pollLast(): T | undefined {
+    if (this.orderedValues.length === 0) {
+      return undefined;
+    }
+    const value = this.orderedValues.pop();
+    if (this.orderedValues.length === 0) {
+      this.resetTypeInference();
+    }
+    return value;
+  }
+
+  lower(element: T): T | undefined {
+    const index = this.lowerIndex(element);
+    if (index < 0) {
+      return undefined;
+    }
+    return this.valueAt(index);
+  }
+
+  floor(element: T): T | undefined {
+    const index = this.findIndex(element);
+    if (index >= 0) {
+      return this.valueAt(index);
+    }
+    const floorIndex = -index - 2;
+    if (floorIndex < 0) {
+      return undefined;
+    }
+    return this.valueAt(floorIndex);
+  }
+
+  ceiling(element: T): T | undefined {
+    const index = this.findIndex(element);
+    if (index >= 0) {
+      return this.valueAt(index);
+    }
+    const ceilingIndex = -index - 1;
+    if (ceilingIndex >= this.orderedValues.length) {
+      return undefined;
+    }
+    return this.valueAt(ceilingIndex);
+  }
+
+  higher(element: T): T | undefined {
+    const index = this.higherIndex(element);
+    if (index >= this.orderedValues.length) {
+      return undefined;
+    }
+    return this.valueAt(index);
+  }
+
+  descendingIterator(): Iterator<T> {
+    const snapshot = this.toArray();
+    let index = snapshot.length - 1;
+
+    return {
+      hasNext: () => index >= 0,
+      next: () => {
+        if (index < 0) {
+          throw new Error("No more elements");
+        }
+        const value = snapshot[index--];
+        if (value === undefined) {
+          throw new Error("No more elements");
+        }
+        return value;
+      },
+    };
+  }
+
+  subSet(
+    fromElement: T,
+    toElement: T,
+    fromInclusive: boolean = true,
+    toInclusive: boolean = false,
+  ): TreeSet<T> {
+    const result = this.createCompatibleSet();
+
+    for (const value of this.orderedValues) {
+      const fromCmp = this.comparator(value, fromElement);
+      const toCmp = this.comparator(value, toElement);
+      const inLower = fromInclusive ? fromCmp >= 0 : fromCmp > 0;
+      const inUpper = toInclusive ? toCmp <= 0 : toCmp < 0;
+      if (inLower && inUpper) {
+        result.add(value);
+      }
+    }
+
+    return result;
+  }
+
+  headSet(toElement: T, inclusive: boolean = false): TreeSet<T> {
+    const result = this.createCompatibleSet();
+
+    for (const value of this.orderedValues) {
+      const cmp = this.comparator(value, toElement);
+      if (cmp < 0 || (inclusive && cmp === 0)) {
+        result.add(value);
+      } else {
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  tailSet(fromElement: T, inclusive: boolean = true): TreeSet<T> {
+    const result = this.createCompatibleSet();
+
+    for (const value of this.orderedValues) {
+      const cmp = this.comparator(value, fromElement);
+      if (cmp > 0 || (inclusive && cmp === 0)) {
+        result.add(value);
+      }
+    }
+
+    return result;
+  }
+
   override removeAll(elements: Collection<T>): boolean {
     let modified = false;
     for (const element of elements.toArray()) {
@@ -147,6 +291,38 @@ export class TreeSet<T> extends AbstractSet<T> implements SetInterface<T> {
     }
 
     return -(low + 1);
+  }
+
+  private lowerIndex(element: T): number {
+    const index = this.findIndex(element);
+    if (index >= 0) {
+      return index - 1;
+    }
+    return -index - 2;
+  }
+
+  private higherIndex(element: T): number {
+    const index = this.findIndex(element);
+    if (index >= 0) {
+      return index + 1;
+    }
+    return -index - 1;
+  }
+
+  private createCompatibleSet(): TreeSet<T> {
+    const options: TreeSetOptions<T> = {
+      comparator: this.comparator,
+      strict: this.strict,
+    };
+
+    if (this.schema !== undefined) {
+      options.schema = this.schema;
+    }
+    if (this.typeValidator !== undefined) {
+      options.validator = this.typeValidator;
+    }
+
+    return new TreeSet<T>(options);
   }
 
   private valueAt(index: number): T {

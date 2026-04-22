@@ -109,6 +109,43 @@ export function describeDeque(createDeque: () => Deque<number>): void {
       });
     });
 
+    describe("additional deque parity methods", () => {
+      beforeEach(() => {
+        deque.clear();
+        deque.addLast(1);
+        deque.addLast(2);
+        deque.addLast(1);
+        deque.addLast(3);
+      });
+
+      it("should remove first and last occurrences", () => {
+        expect(deque.removeFirstOccurrence(1)).toBe(true);
+        expect(deque.toArray()).toEqual([2, 1, 3]);
+
+        expect(deque.removeLastOccurrence(1)).toBe(true);
+        expect(deque.toArray()).toEqual([2, 3]);
+
+        expect(deque.removeLastOccurrence(999)).toBe(false);
+      });
+
+      it("should support stack aliases push and pop", () => {
+        deque.push(9);
+        expect(deque.getFirst()).toBe(9);
+        expect(deque.pop()).toBe(9);
+      });
+
+      it("should provide descending iterator", () => {
+        const values: number[] = [];
+        const iterator = deque.descendingIterator();
+
+        while (iterator.hasNext()) {
+          values.push(iterator.next());
+        }
+
+        expect(values).toEqual([3, 1, 2, 1]);
+      });
+    });
+
     describe("Collection integration", () => {
       it("should support add alias and remove by value", () => {
         expect(deque.add(10)).toBe(true);

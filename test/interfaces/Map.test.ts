@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import type { Map } from "../../src/interfaces/Map";
+import { beforeEach, describe, expect, it } from "vitest";
+import type { Map as MapInterface } from "../../src/interfaces/Map";
 
 /**
  * Creates a test suite for Map interface implementations.
@@ -10,9 +10,11 @@ import type { Map } from "../../src/interfaces/Map";
  * describeMap(() => new MyMap());
  * ```
  */
-export function describeMap(createMap: () => Map<string, number>): void {
+export function describeMap(
+  createMap: () => MapInterface<string, number>,
+): void {
   describe("Map Interface", () => {
-    let map: Map<string, number>;
+    let map: MapInterface<string, number>;
 
     beforeEach(() => {
       map = createMap();
@@ -145,6 +147,116 @@ export function describeMap(createMap: () => Map<string, number>): void {
         map.clear();
         const result = map.remove("a");
         expect(result).toBeUndefined();
+      });
+    });
+
+    describe("map convenience parity methods", () => {
+      it("should remove entry only when key/value pair matches", () => {
+        map.put("a", 1);
+        map.put("b", 2);
+
+        expect(map.removeEntry("a", 999)).toBe(false);
+        expect(map.containsKey("a")).toBe(true);
+
+        expect(map.removeEntry("a", 1)).toBe(true);
+        expect(map.containsKey("a")).toBe(false);
+      });
+
+      it("should return default only for missing keys in getOrDefault", () => {
+        map.put("a", 1);
+        expect(map.getOrDefault("a", 100)).toBe(1);
+        expect(map.getOrDefault("missing", 100)).toBe(100);
+      });
+
+      it("should put if absent and return previous value when present", () => {
+        expect(map.putIfAbsent("a", 1)).toBeUndefined();
+        expect(map.get("a")).toBe(1);
+
+        expect(map.putIfAbsent("a", 2)).toBe(1);
+        expect(map.get("a")).toBe(1);
+      });
+
+      it("should replace only when key exists", () => {
+        expect(map.replace("a", 10)).toBeUndefined();
+
+        map.put("a", 1);
+        expect(map.replace("a", 10)).toBe(1);
+        expect(map.get("a")).toBe(10);
+      });
+
+      it("should replace entry only when old value matches", () => {
+        map.put("a", 1);
+        expect(map.replaceEntry("a", 2, 10)).toBe(false);
+        expect(map.get("a")).toBe(1);
+
+        expect(map.replaceEntry("a", 1, 10)).toBe(true);
+        expect(map.get("a")).toBe(10);
+      });
+
+      it("should compute if absent only for missing keys", () => {
+        map.put("a", 1);
+
+        const existing = map.computeIfAbsent("a", () => 999);
+        expect(existing).toBe(1);
+        expect(map.get("a")).toBe(1);
+
+        const computed = map.computeIfAbsent("b", (key) => key.length);
+        expect(computed).toBe(1);
+        expect(map.get("b")).toBe(1);
+      });
+
+      it("should compute if present and remove when remapping returns undefined", () => {
+        map.put("a", 2);
+
+        const changed = map.computeIfPresent("a", (_key, value) => value * 2);
+        expect(changed).toBe(4);
+        expect(map.get("a")).toBe(4);
+
+        const removed = map.computeIfPresent("a", () => undefined);
+        expect(removed).toBeUndefined();
+        expect(map.containsKey("a")).toBe(false);
+
+        expect(
+          map.computeIfPresent("missing", (_k, v) => v + 1),
+        ).toBeUndefined();
+      });
+
+      it("should compute using current mapped value and remove when undefined", () => {
+        map.put("a", 2);
+
+        const updated = map.compute("a", (_key, value) => (value ?? 0) + 3);
+        expect(updated).toBe(5);
+        expect(map.get("a")).toBe(5);
+
+        const created = map.compute("b", (_key, value) => (value ?? 10) + 1);
+        expect(created).toBe(11);
+        expect(map.get("b")).toBe(11);
+
+        const removed = map.compute("a", () => undefined);
+        expect(removed).toBeUndefined();
+        expect(map.containsKey("a")).toBe(false);
+      });
+
+      it("should merge absent values and remap present values", () => {
+        const inserted = map.merge(
+          "a",
+          2,
+          (oldValue, newValue) => oldValue + newValue,
+        );
+        expect(inserted).toBe(2);
+        expect(map.get("a")).toBe(2);
+
+        const merged = map.merge(
+          "a",
+          3,
+          (oldValue, newValue) => oldValue + newValue,
+        );
+        expect(merged).toBe(5);
+        expect(map.get("a")).toBe(5);
+
+        const removed = map.merge("a", 3, () => undefined);
+        expect(removed).toBeUndefined();
+        expect(map.containsKey("a")).toBe(false);
       });
     });
 

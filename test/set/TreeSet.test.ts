@@ -63,4 +63,83 @@ describe("TreeSet - Ordering and Comparator", () => {
 
     expect(values).toEqual([1, 3, 4]);
   });
+
+  it("should provide first and last", () => {
+    set.add(10);
+    set.add(2);
+    set.add(7);
+
+    expect(set.first()).toBe(2);
+    expect(set.last()).toBe(10);
+  });
+
+  it("should throw first/last on empty set", () => {
+    expect(() => set.first()).toThrow("Set is empty");
+    expect(() => set.last()).toThrow("Set is empty");
+  });
+
+  it("should provide lower/floor/ceiling/higher navigation", () => {
+    set.add(10);
+    set.add(20);
+    set.add(30);
+
+    expect(set.lower(20)).toBe(10);
+    expect(set.lower(10)).toBeUndefined();
+
+    expect(set.floor(20)).toBe(20);
+    expect(set.floor(25)).toBe(20);
+    expect(set.floor(5)).toBeUndefined();
+
+    expect(set.ceiling(20)).toBe(20);
+    expect(set.ceiling(25)).toBe(30);
+    expect(set.ceiling(35)).toBeUndefined();
+
+    expect(set.higher(20)).toBe(30);
+    expect(set.higher(30)).toBeUndefined();
+  });
+
+  it("should poll first and last", () => {
+    set.add(10);
+    set.add(20);
+    set.add(30);
+
+    expect(set.pollFirst()).toBe(10);
+    expect(set.pollLast()).toBe(30);
+    expect(set.toArray()).toEqual([20]);
+
+    expect(set.pollFirst()).toBe(20);
+    expect(set.pollFirst()).toBeUndefined();
+    expect(set.pollLast()).toBeUndefined();
+  });
+
+  it("should iterate in descending order", () => {
+    set.add(4);
+    set.add(1);
+    set.add(3);
+
+    const values: number[] = [];
+    const iterator = set.descendingIterator();
+
+    while (iterator.hasNext()) {
+      values.push(iterator.next());
+    }
+
+    expect(values).toEqual([4, 3, 1]);
+  });
+
+  it("should create subset, headset and tailset ranges", () => {
+    set.add(10);
+    set.add(20);
+    set.add(30);
+    set.add(40);
+
+    expect(set.subSet(15, 35).toArray()).toEqual([20, 30]);
+    expect(set.subSet(20, 40, true, true).toArray()).toEqual([20, 30, 40]);
+
+    expect(set.headSet(30).toArray()).toEqual([10, 20]);
+    expect(set.headSet(30, true).toArray()).toEqual([10, 20, 30]);
+
+    expect(set.tailSet(20).toArray()).toEqual([20, 30, 40]);
+    expect(set.tailSet(20, false).toArray()).toEqual([30, 40]);
+  });
 });

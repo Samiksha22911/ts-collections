@@ -1,19 +1,19 @@
-import type { Map, Iterator, Collection } from "../interfaces";
-import { z, type ZodSchema } from "zod";
+import { type ZodSchema, z } from "zod";
+import type { Collection, Iterator, Map as MapInterface } from "../interfaces";
 
 /**
  * Options for runtime type validation in maps.
- * 
+ *
  * By default, maps automatically enforce type consistency for both keys and values
  * based on the first key-value pair added (similar to Java's HashMap).
- * 
+ *
  * No configuration is needed - type safety works automatically!
  */
 export interface MapTypeValidationOptions<K, V> {
   /**
    * If false, disables automatic type checking for keys and values.
    * Default: true (type safety is ON by default, like Java)
-   * 
+   *
    * @example
    * ```typescript
    * // Type safety enabled by default
@@ -28,11 +28,11 @@ export interface MapTypeValidationOptions<K, V> {
    * Optional Zod schema for validating keys.
    * Only used if strict mode is enabled.
    * For power users who need advanced validation.
-   * 
+   *
    * @example
    * ```typescript
    * import { z } from 'zod';
-   * 
+   *
    * const map = new HashMap<string, number>({
    *   keySchema: z.string().min(1)  // Keys must not be empty
    * });
@@ -63,42 +63,42 @@ export interface MapTypeValidationOptions<K, V> {
 /**
  * Abstract base class for Map implementations.
  * Provides default implementations of putAll, clear, and iterator methods.
- * 
+ *
  * **Type Safety by Default:** Maps automatically enforce type consistency for both keys and values
  * based on the first key-value pair added, just like Java's HashMap. No configuration needed!
- * 
+ *
  * For advanced use cases, you can optionally provide Zod schemas or custom validators.
- * 
+ *
  * Concrete subclasses must implement: size(), isEmpty(), containsKey(), containsValue(),
  * get(), put(), remove(), keyIterator(), valueIterator(), keys(), values(), entries()
  *
  * @template K The type of keys maintained by this map
  * @template V The type of mapped values
- * 
+ *
  * @example
  * ```typescript
  * import { HashMap } from 'ts-collections';
- * 
+ *
  * // Type-safe by default - just like Java!
  * const map = new HashMap<string, number>();
  * map.put("age", 25);        // ✓ OK
  * map.put("height", 180);    // ✓ OK
  * console.log(map.get("age")); // 25
- * 
+ *
  * // Type errors are caught automatically:
  * map.put(123, 30);          // ✗ TypeError: Key type mismatch
  * map.put("name", "Alice");  // ✗ TypeError: Value type mismatch
- * 
+ *
  * // For power users: advanced validation
  * import { z } from 'zod';
- * 
+ *
  * const products = new HashMap<string, number>({
  *   keySchema: z.string().min(1),      // SKU validation
  *   valueSchema: z.number().positive() // Price validation
  * });
  * ```
  */
-export abstract class AbstractMap<K, V> implements Map<K, V> {
+export abstract class AbstractMap<K, V> implements MapInterface<K, V> {
   protected keyValidator?: (key: unknown) => boolean;
   protected valueValidator?: (value: unknown) => boolean;
   protected keySchema?: ZodSchema<K>;
@@ -109,11 +109,11 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
 
   /**
    * Initializes the map with optional type validation settings.
-   * 
+   *
    * By default, maps are type-safe (strict mode on).
    * The first key-value pair determines the types, and all subsequent
    * pairs must match those types - just like Java's HashMap!
-   * 
+   *
    * @param options Configuration for type validation
    */
   constructor(options?: MapTypeValidationOptions<K, V>) {
@@ -184,6 +184,147 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
    */
   abstract remove(key: K): V | undefined;
 
+  removeEntry(key: K, value: V): boolean {
+    if (!this.containsKey(key)) {
+      return false;
+    }
+
+    const currentValue = this.get(key);
+    if (currentValue !== value) {
+      return false;
+    }
+
+    this.remove(key);
+    return true;
+  }
+
+  getOrDefault(key: K, defaultValue: V): V {
+    if (this.containsKey(key)) {
+      return this.get(key) as V;
+    }
+    return defaultValue;
+  }
+
+  putIfAbsent(key: K, value: V): V | undefined {
+    if (!this.containsKey(key)) {
+      this.put(key, value);
+      return undefined;
+    }
+
+    const currentValue = this.get(key);
+    if (currentValue === undefined) {
+      this.put(key, value);
+    }
+
+    return currentValue;
+  }
+
+  replace(key: K, value: V): V | undefined {
+    if (!this.containsKey(key)) {
+      return undefined;
+    }
+
+    return this.put(key, value);
+  }
+
+  replaceEntry(key: K, oldValue: V, newValue: V): boolean {
+    if (!this.containsKey(key)) {
+      return false;
+    }
+
+    const currentValue = this.get(key);
+    if (currentValue !== oldValue) {
+      return false;
+    }
+
+    this.put(key, newValue);
+    return true;
+  }
+
+  computeIfAbsent(
+    key: K,
+    mappingFunction: (key: K) => V | undefined,
+  ): V | undefined {
+    if (this.containsKey(key)) {
+      const currentValue = this.get(key);
+      if (currentValue !== undefined) {
+        return currentValue;
+      }
+    }
+
+    const computedValue = mappingFunction(key);
+    if (computedValue !== undefined) {
+      this.put(key, computedValue);
+    }
+
+    return computedValue;
+  }
+
+  computeIfPresent(
+    key: K,
+    remappingFunction: (key: K, value: V) => V | undefined,
+  ): V | undefined {
+    if (!this.containsKey(key)) {
+      return undefined;
+    }
+
+    const currentValue = this.get(key);
+    if (currentValue === undefined) {
+      return undefined;
+    }
+
+    const newValue = remappingFunction(key, currentValue);
+    if (newValue === undefined) {
+      this.remove(key);
+      return undefined;
+    }
+
+    this.put(key, newValue);
+    return newValue;
+  }
+
+  compute(
+    key: K,
+    remappingFunction: (key: K, value: V | undefined) => V | undefined,
+  ): V | undefined {
+    const oldValue = this.containsKey(key) ? this.get(key) : undefined;
+    const newValue = remappingFunction(key, oldValue);
+
+    if (newValue === undefined) {
+      this.remove(key);
+      return undefined;
+    }
+
+    this.put(key, newValue);
+    return newValue;
+  }
+
+  merge(
+    key: K,
+    value: V,
+    remappingFunction: (oldValue: V, newValue: V) => V | undefined,
+  ): V | undefined {
+    if (!this.containsKey(key)) {
+      this.put(key, value);
+      return value;
+    }
+
+    const oldValue = this.get(key);
+    if (oldValue === undefined) {
+      this.put(key, value);
+      return value;
+    }
+
+    const merged = remappingFunction(oldValue, value);
+    if (merged === undefined) {
+      this.remove(key);
+      return undefined;
+    }
+
+    this.put(key, merged);
+    return merged;
+  }
+
   /**
    * Removes all of the mappings from this map.
    * Must be implemented by subclasses.
@@ -226,7 +367,7 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
    * Default implementation: iterates through all entries of the specified map
    * and puts each entry into this map.
    */
-  putAll(other: Map<K, V>): void {
+  putAll(other: MapInterface<K, V>): void {
     const entries = other.entries();
     for (const [key, value] of entries) {
       this.put(key, value);
@@ -236,12 +377,12 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
   /**
    * Validates the type of a key before adding it to the map.
    * Uses cascading validation: Zod schema > Custom validator > Strict type checking.
-   * 
+   *
    * By default (strict=true), enforces type consistency:
    * - First key determines the key type
    * - All subsequent keys must match that type
    * - No configuration needed! (Just like Java)
-   * 
+   *
    * @param key The key to validate
    * @throws {TypeError} If key validation fails
    */
@@ -258,11 +399,12 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
       } catch (error) {
         if (error instanceof z.ZodError) {
           const issues = error.issues
-            .map(issue => {
-              const path = issue.path.length > 0 ? `${issue.path.join('.')}` : 'root';
+            .map((issue) => {
+              const path =
+                issue.path.length > 0 ? `${issue.path.join(".")}` : "root";
               return `${path}: ${issue.message}`;
             })
-            .join('; ');
+            .join("; ");
           throw new TypeError(`Key validation failed: ${issues}`);
         }
         throw error;
@@ -274,7 +416,7 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
     if (this.keyValidator) {
       if (!this.keyValidator(key)) {
         throw new TypeError(
-          'Key validation failed: key does not match the expected type'
+          "Key validation failed: key does not match the expected type",
         );
       }
       return;
@@ -287,7 +429,7 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
       const keyType = this.getTypeString(key);
       if (keyType !== this.inferredKeyType) {
         throw new TypeError(
-          `Key type mismatch: expected ${this.inferredKeyType}, but got ${keyType}`
+          `Key type mismatch: expected ${this.inferredKeyType}, but got ${keyType}`,
         );
       }
     }
@@ -296,12 +438,12 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
   /**
    * Validates the type of a value before adding it to the map.
    * Uses cascading validation: Zod schema > Custom validator > Strict type checking.
-   * 
+   *
    * By default (strict=true), enforces type consistency:
    * - First value determines the value type
    * - All subsequent values must match that type
    * - No configuration needed! (Just like Java)
-   * 
+   *
    * @param value The value to validate
    * @throws {TypeError} If value validation fails
    */
@@ -318,11 +460,12 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
       } catch (error) {
         if (error instanceof z.ZodError) {
           const issues = error.issues
-            .map(issue => {
-              const path = issue.path.length > 0 ? `${issue.path.join('.')}` : 'root';
+            .map((issue) => {
+              const path =
+                issue.path.length > 0 ? `${issue.path.join(".")}` : "root";
               return `${path}: ${issue.message}`;
             })
-            .join('; ');
+            .join("; ");
           throw new TypeError(`Value validation failed: ${issues}`);
         }
         throw error;
@@ -334,7 +477,7 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
     if (this.valueValidator) {
       if (!this.valueValidator(value)) {
         throw new TypeError(
-          'Value validation failed: value does not match the expected type'
+          "Value validation failed: value does not match the expected type",
         );
       }
       return;
@@ -347,7 +490,7 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
       const valueType = this.getTypeString(value);
       if (valueType !== this.inferredValueType) {
         throw new TypeError(
-          `Value type mismatch: expected ${this.inferredValueType}, but got ${valueType}`
+          `Value type mismatch: expected ${this.inferredValueType}, but got ${valueType}`,
         );
       }
     }
@@ -395,15 +538,15 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
    */
   protected getKeyValidationMode(): string {
     if (!this.strict) {
-      return 'No validation (strict: false)';
+      return "No validation (strict: false)";
     }
     if (this.keySchema) {
-      return 'Zod schema (power user mode)';
+      return "Zod schema (power user mode)";
     }
     if (this.keyValidator) {
-      return 'Custom validator (power user mode)';
+      return "Custom validator (power user mode)";
     }
-    return 'Strict type inference (default - like Java)';
+    return "Strict type inference (default - like Java)";
   }
 
   /**
@@ -412,14 +555,14 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
    */
   protected getValueValidationMode(): string {
     if (!this.strict) {
-      return 'No validation (strict: false)';
+      return "No validation (strict: false)";
     }
     if (this.valueSchema) {
-      return 'Zod schema (power user mode)';
+      return "Zod schema (power user mode)";
     }
     if (this.valueValidator) {
-      return 'Custom validator (power user mode)';
+      return "Custom validator (power user mode)";
     }
-    return 'Strict type inference (default - like Java)';
+    return "Strict type inference (default - like Java)";
   }
 }

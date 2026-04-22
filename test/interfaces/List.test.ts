@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { List } from "../../src/interfaces/List";
 
 /**
@@ -82,6 +82,16 @@ export function describeList(createList: () => List<number>): void {
       it("should throw error for negative index", () => {
         expect(() => list.addAt(-1, 100)).toThrow();
       });
+
+      it("should support addFirst and addLast", () => {
+        list.clear();
+        list.addFirst(20);
+        list.addFirst(10);
+        list.addLast(30);
+        list.addLast(40);
+
+        expect(list.toArray()).toEqual([10, 20, 30, 40]);
+      });
     });
 
     describe("removeAt", () => {
@@ -120,6 +130,24 @@ export function describeList(createList: () => List<number>): void {
         const removed = list.removeAt(2);
         expect(removed).toBe(30);
         expect(list.size()).toBe(2);
+      });
+
+      it("should support getFirst/getLast/removeFirst/removeLast", () => {
+        expect(list.getFirst()).toBe(10);
+        expect(list.getLast()).toBe(30);
+
+        expect(list.removeFirst()).toBe(10);
+        expect(list.removeLast()).toBe(30);
+        expect(list.toArray()).toEqual([20]);
+      });
+
+      it("should throw from first/last operations when empty", () => {
+        list.clear();
+
+        expect(() => list.getFirst()).toThrow();
+        expect(() => list.getLast()).toThrow();
+        expect(() => list.removeFirst()).toThrow();
+        expect(() => list.removeLast()).toThrow();
       });
     });
 

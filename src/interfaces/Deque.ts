@@ -1,3 +1,4 @@
+import type { Iterator } from "./Iterator";
 import type { Queue } from "./Queue";
 
 /**
@@ -93,4 +94,40 @@ export interface Deque<E> extends Queue<E> {
    * or returns undefined if this deque is empty.
    */
   peekLast(): E | undefined;
+
+  /**
+   * Removes the first occurrence of the specified element from this deque.
+   *
+   * @param element Element to remove
+   * @returns true if an element was removed
+   */
+  removeFirstOccurrence(element: E): boolean;
+
+  /**
+   * Removes the last occurrence of the specified element from this deque.
+   *
+   * @param element Element to remove
+   * @returns true if an element was removed
+   */
+  removeLastOccurrence(element: E): boolean;
+
+  /**
+   * Pushes an element onto the stack represented by this deque (front insertion).
+   *
+   * @param element Element to push
+   */
+  push(element: E): void;
+
+  /**
+   * Pops an element from the stack represented by this deque (front removal).
+   *
+   * @returns The popped element
+   * @throws Error if this deque is empty
+   */
+  pop(): E;
+
+  /**
+   * Returns an iterator over elements in reverse sequential order.
+   */
+  descendingIterator(): Iterator<E>;
 }

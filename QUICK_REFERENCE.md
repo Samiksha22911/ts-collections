@@ -84,6 +84,11 @@ deque.addFirst('middle');
 deque.addFirst('front');
 deque.addLast('back');
 
+deque.push('top');
+deque.pop(); // 'top'
+
+deque.removeFirstOccurrence('middle');
+
 deque.pollFirst(); // 'front'
 deque.pollLast();  // 'back'
 ```
@@ -109,6 +114,10 @@ map.put('a', 1);
 map.put('b', 2);
 
 map.keys(); // ['a', 'b', 'c']
+map.firstKey();   // 'a'
+map.higherKey('a'); // 'b'
+
+map.headMap('c').entries(); // [['a', 1], ['b', 2]]
 ```
 
 ### TreeSet
@@ -120,6 +129,10 @@ set.add(1);
 set.add(2);
 
 set.toArray(); // [1, 2, 3]
+set.floor(2);  // 2
+set.higher(2); // 3
+
+const descending = set.descendingIterator();
 ```
 
 ## Complex Types

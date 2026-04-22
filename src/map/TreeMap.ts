@@ -4,7 +4,7 @@ import {
 } from "../abstracts/AbstractMap";
 import type { Collection } from "../interfaces/Collection";
 import type { Iterator } from "../interfaces/Iterator";
-import type { Map as MapInterface } from "../interfaces/Map";
+import type { NavigableMap } from "../interfaces/NavigableMap";
 
 export interface TreeMapOptions<K, V> extends MapTypeValidationOptions<K, V> {
   comparator?: (a: K, b: K) => number;
@@ -21,7 +21,7 @@ export interface TreeMapOptions<K, V> extends MapTypeValidationOptions<K, V> {
  */
 export class TreeMap<K, V>
   extends AbstractMap<K, V>
-  implements MapInterface<K, V> {
+  implements NavigableMap<K, V> {
   private readonly comparator: (a: K, b: K) => number;
   private readonly orderedEntries: Array<[K, V]> = [];
 
@@ -193,12 +193,197 @@ export class TreeMap<K, V>
     return [...this.orderedEntries];
   }
 
+  firstKey(): K {
+    if (this.orderedEntries.length === 0) {
+      throw new Error("Map is empty");
+    }
+    return this.entryAt(0)[0];
+  }
+
+  lastKey(): K {
+    if (this.orderedEntries.length === 0) {
+      throw new Error("Map is empty");
+    }
+    return this.entryAt(this.orderedEntries.length - 1)[0];
+  }
+
+  firstEntry(): [K, V] {
+    if (this.orderedEntries.length === 0) {
+      throw new Error("Map is empty");
+    }
+    const [key, value] = this.entryAt(0);
+    return [key, value];
+  }
+
+  lastEntry(): [K, V] {
+    if (this.orderedEntries.length === 0) {
+      throw new Error("Map is empty");
+    }
+    const [key, value] = this.entryAt(this.orderedEntries.length - 1);
+    return [key, value];
+  }
+
+  pollFirstEntry(): [K, V] | undefined {
+    if (this.orderedEntries.length === 0) {
+      return undefined;
+    }
+    const removed = this.orderedEntries.shift();
+    if (removed === undefined) {
+      return undefined;
+    }
+    if (this.orderedEntries.length === 0) {
+      this.resetTypeInference();
+    }
+    return removed;
+  }
+
+  pollLastEntry(): [K, V] | undefined {
+    if (this.orderedEntries.length === 0) {
+      return undefined;
+    }
+    const removed = this.orderedEntries.pop();
+    if (removed === undefined) {
+      return undefined;
+    }
+    if (this.orderedEntries.length === 0) {
+      this.resetTypeInference();
+    }
+    return removed;
+  }
+
+  lowerKey(key: K): K | undefined {
+    const index = this.lowerIndex(key);
+    if (index < 0) {
+      return undefined;
+    }
+    return this.entryAt(index)[0];
+  }
+
+  floorKey(key: K): K | undefined {
+    const index = this.findKeyIndex(key);
+    if (index >= 0) {
+      return this.entryAt(index)[0];
+    }
+    const floorIndex = -index - 2;
+    if (floorIndex < 0) {
+      return undefined;
+    }
+    return this.entryAt(floorIndex)[0];
+  }
+
+  ceilingKey(key: K): K | undefined {
+    const index = this.findKeyIndex(key);
+    if (index >= 0) {
+      return this.entryAt(index)[0];
+    }
+    const ceilingIndex = -index - 1;
+    if (ceilingIndex >= this.orderedEntries.length) {
+      return undefined;
+    }
+    return this.entryAt(ceilingIndex)[0];
+  }
+
+  higherKey(key: K): K | undefined {
+    const index = this.higherIndex(key);
+    if (index >= this.orderedEntries.length) {
+      return undefined;
+    }
+    return this.entryAt(index)[0];
+  }
+
+  subMap(
+    fromKey: K,
+    toKey: K,
+    fromInclusive: boolean = true,
+    toInclusive: boolean = false,
+  ): TreeMap<K, V> {
+    const result = this.createCompatibleMap();
+
+    for (const [key, value] of this.orderedEntries) {
+      const fromCmp = this.comparator(key, fromKey);
+      const toCmp = this.comparator(key, toKey);
+      const inLower = fromInclusive ? fromCmp >= 0 : fromCmp > 0;
+      const inUpper = toInclusive ? toCmp <= 0 : toCmp < 0;
+      if (inLower && inUpper) {
+        result.put(key, value);
+      }
+    }
+
+    return result;
+  }
+
+  headMap(toKey: K, inclusive: boolean = false): TreeMap<K, V> {
+    const result = this.createCompatibleMap();
+
+    for (const [key, value] of this.orderedEntries) {
+      const cmp = this.comparator(key, toKey);
+      if (cmp < 0 || (inclusive && cmp === 0)) {
+        result.put(key, value);
+      } else {
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  tailMap(fromKey: K, inclusive: boolean = true): TreeMap<K, V> {
+    const result = this.createCompatibleMap();
+
+    for (const [key, value] of this.orderedEntries) {
+      const cmp = this.comparator(key, fromKey);
+      if (cmp > 0 || (inclusive && cmp === 0)) {
+        result.put(key, value);
+      }
+    }
+
+    return result;
+  }
+
   private entryAt(index: number): [K, V] {
     const entry = this.orderedEntries[index];
     if (entry === undefined) {
       throw new Error(`Invalid entry index: ${index}`);
     }
     return entry;
+  }
+
+  private lowerIndex(key: K): number {
+    const index = this.findKeyIndex(key);
+    if (index >= 0) {
+      return index - 1;
+    }
+    return -index - 2;
+  }
+
+  private higherIndex(key: K): number {
+    const index = this.findKeyIndex(key);
+    if (index >= 0) {
+      return index + 1;
+    }
+    return -index - 1;
+  }
+
+  private createCompatibleMap(): TreeMap<K, V> {
+    const options: TreeMapOptions<K, V> = {
+      comparator: this.comparator,
+      strict: this.strict,
+    };
+
+    if (this.keySchema !== undefined) {
+      options.keySchema = this.keySchema;
+    }
+    if (this.valueSchema !== undefined) {
+      options.valueSchema = this.valueSchema;
+    }
+    if (this.keyValidator !== undefined) {
+      options.keyValidator = this.keyValidator;
+    }
+    if (this.valueValidator !== undefined) {
+      options.valueValidator = this.valueValidator;
+    }
+
+    return new TreeMap<K, V>(options);
   }
 
   /**

@@ -63,4 +63,93 @@ describe("TreeMap - Ordering and Comparator", () => {
       "Comparator is required for non-primitive key types",
     );
   });
+
+  it("should provide first/last keys and entries", () => {
+    map.put(10, "ten");
+    map.put(2, "two");
+    map.put(7, "seven");
+
+    expect(map.firstKey()).toBe(2);
+    expect(map.lastKey()).toBe(10);
+    expect(map.firstEntry()).toEqual([2, "two"]);
+    expect(map.lastEntry()).toEqual([10, "ten"]);
+  });
+
+  it("should throw first/last methods when empty", () => {
+    expect(() => map.firstKey()).toThrow("Map is empty");
+    expect(() => map.lastKey()).toThrow("Map is empty");
+    expect(() => map.firstEntry()).toThrow("Map is empty");
+    expect(() => map.lastEntry()).toThrow("Map is empty");
+  });
+
+  it("should provide lower/floor/ceiling/higher key navigation", () => {
+    map.put(10, "ten");
+    map.put(20, "twenty");
+    map.put(30, "thirty");
+
+    expect(map.lowerKey(20)).toBe(10);
+    expect(map.lowerKey(10)).toBeUndefined();
+
+    expect(map.floorKey(20)).toBe(20);
+    expect(map.floorKey(25)).toBe(20);
+    expect(map.floorKey(5)).toBeUndefined();
+
+    expect(map.ceilingKey(20)).toBe(20);
+    expect(map.ceilingKey(25)).toBe(30);
+    expect(map.ceilingKey(35)).toBeUndefined();
+
+    expect(map.higherKey(20)).toBe(30);
+    expect(map.higherKey(30)).toBeUndefined();
+  });
+
+  it("should poll first and last entries", () => {
+    map.put(10, "ten");
+    map.put(20, "twenty");
+    map.put(30, "thirty");
+
+    expect(map.pollFirstEntry()).toEqual([10, "ten"]);
+    expect(map.pollLastEntry()).toEqual([30, "thirty"]);
+    expect(map.entries()).toEqual([[20, "twenty"]]);
+
+    expect(map.pollFirstEntry()).toEqual([20, "twenty"]);
+    expect(map.pollFirstEntry()).toBeUndefined();
+    expect(map.pollLastEntry()).toBeUndefined();
+  });
+
+  it("should create subMap, headMap, and tailMap ranges", () => {
+    map.put(10, "ten");
+    map.put(20, "twenty");
+    map.put(30, "thirty");
+    map.put(40, "forty");
+
+    expect(map.subMap(15, 35).entries()).toEqual([
+      [20, "twenty"],
+      [30, "thirty"],
+    ]);
+    expect(map.subMap(20, 40, true, true).entries()).toEqual([
+      [20, "twenty"],
+      [30, "thirty"],
+      [40, "forty"],
+    ]);
+
+    expect(map.headMap(30).entries()).toEqual([
+      [10, "ten"],
+      [20, "twenty"],
+    ]);
+    expect(map.headMap(30, true).entries()).toEqual([
+      [10, "ten"],
+      [20, "twenty"],
+      [30, "thirty"],
+    ]);
+
+    expect(map.tailMap(20).entries()).toEqual([
+      [20, "twenty"],
+      [30, "thirty"],
+      [40, "forty"],
+    ]);
+    expect(map.tailMap(20, false).entries()).toEqual([
+      [30, "thirty"],
+      [40, "forty"],
+    ]);
+  });
 });

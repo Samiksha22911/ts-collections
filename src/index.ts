@@ -115,8 +115,12 @@ export type {
 	Iterator,
 	List,
 	Map,
+	NavigableMap,
+	NavigableSet,
 	Queue,
 	Set,
+	SortedMap,
+	SortedSet,
 	Stack,
 } from "./interfaces";
 // Concrete Implementations

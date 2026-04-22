@@ -1,4 +1,4 @@
-import type { Deque } from "../interfaces";
+import type { Deque, Iterator } from "../interfaces";
 import { AbstractQueue, type TypeValidationOptions } from "./AbstractQueue";
 
 export type { TypeValidationOptions };
@@ -14,7 +14,9 @@ export type { TypeValidationOptions };
  *
  * @template E The type of elements in this deque
  */
-export abstract class AbstractDeque<E> extends AbstractQueue<E> implements Deque<E> {
+export abstract class AbstractDeque<E>
+  extends AbstractQueue<E>
+  implements Deque<E> {
   constructor(options?: TypeValidationOptions<E>) {
     super(options);
   }
@@ -42,6 +44,57 @@ export abstract class AbstractDeque<E> extends AbstractQueue<E> implements Deque
   abstract peekFirst(): E | undefined;
 
   abstract peekLast(): E | undefined;
+
+  removeFirstOccurrence(element: E): boolean {
+    return this.remove(element);
+  }
+
+  removeLastOccurrence(element: E): boolean {
+    const values = this.toArray();
+    const index = values.lastIndexOf(element);
+    if (index < 0) {
+      return false;
+    }
+
+    this.clear();
+    for (let i = 0; i < values.length; i++) {
+      if (i !== index) {
+        const value = values[i];
+        if (value !== undefined) {
+          this.addLast(value);
+        }
+      }
+    }
+
+    return true;
+  }
+
+  push(element: E): void {
+    this.addFirst(element);
+  }
+
+  pop(): E {
+    return this.removeFirst();
+  }
+
+  descendingIterator(): Iterator<E> {
+    const snapshot = this.toArray();
+    let index = snapshot.length - 1;
+
+    return {
+      hasNext: () => index >= 0,
+      next: () => {
+        if (index < 0) {
+          throw new Error("No more elements");
+        }
+        const value = snapshot[index--];
+        if (value === undefined) {
+          throw new Error("No more elements");
+        }
+        return value;
+      },
+    };
+  }
 
   override offer(element: E): boolean {
     return this.offerLast(element);

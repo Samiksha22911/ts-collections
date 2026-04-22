@@ -1,6 +1,9 @@
+import {
+  AbstractList,
+  type TypeValidationOptions,
+} from "../abstracts/AbstractList";
 import type { Iterator } from "../interfaces/Iterator";
 import type { List } from "../interfaces/List";
-import { AbstractList, type TypeValidationOptions } from "../abstracts/AbstractList";
 
 /**
  * Node in a doubly linked list.
@@ -22,7 +25,7 @@ interface Node<T> {
  * @example
  * ```typescript
  * import { LinkedList } from 'ts-collections';
- * 
+ *
  * // Automatic type safety (enabled by default, like Java)
  * const list = new LinkedList<number>();
  * list.add(1);
@@ -30,11 +33,11 @@ interface Node<T> {
  * list.addLast(2);
  * console.log(list.toArray()); // [0, 1, 2]
  * list.add("text" as any); // ✗ Throws TypeError: type mismatch
- * 
+ *
  * // Bidirectional iteration
  * const fwd = list.iterator();
  * while (fwd.hasNext()) console.log(fwd.next());
- * 
+ *
  * const rev = list.reverseIterator();
  * while (rev.hasNext()) console.log(rev.next());
  * ```
@@ -66,7 +69,7 @@ export class LinkedList<T> extends AbstractList<T> implements List<T> {
    * Inserts an element at the beginning of the list.
    * @param element Element to add.
    */
-  addFirst(element: T): void {
+  override addFirst(element: T): void {
     this.validateElementType(element);
     const newNode: Node<T> = {
       value: element,
@@ -90,7 +93,7 @@ export class LinkedList<T> extends AbstractList<T> implements List<T> {
    * Appends an element to the end of the list.
    * @param element Element to add.
    */
-  addLast(element: T): void {
+  override addLast(element: T): void {
     this.validateElementType(element);
     const newNode: Node<T> = {
       value: element,
@@ -130,7 +133,7 @@ export class LinkedList<T> extends AbstractList<T> implements List<T> {
    * @returns The first element.
    * @throws Error if the list is empty.
    */
-  getFirst(): T {
+  override getFirst(): T {
     if (this.head === null) {
       throw new Error("List is empty");
     }
@@ -142,7 +145,7 @@ export class LinkedList<T> extends AbstractList<T> implements List<T> {
    * @returns The last element.
    * @throws Error if the list is empty.
    */
-  getLast(): T {
+  override getLast(): T {
     if (this.tail === null) {
       throw new Error("List is empty");
     }
@@ -154,7 +157,7 @@ export class LinkedList<T> extends AbstractList<T> implements List<T> {
    * @returns The removed element.
    * @throws Error if the list is empty.
    */
-  removeFirst(): T {
+  override removeFirst(): T {
     if (this.head === null) {
       throw new Error("List is empty");
     }
@@ -183,7 +186,7 @@ export class LinkedList<T> extends AbstractList<T> implements List<T> {
    * @returns The removed element.
    * @throws Error if the list is empty.
    */
-  removeLast(): T {
+  override removeLast(): T {
     if (this.tail === null) {
       throw new Error("List is empty");
     }
