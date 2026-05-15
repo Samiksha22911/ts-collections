@@ -1,72 +1,10 @@
 {
-	"name": "@katiyar_mradul/ts-collections",
+	"name": "@ts-collections/collections",
 	"version": "0.0.1",
 	"description": "A fully-typed, Java-inspired Collections Framework for TypeScript, providing industry-grade implementations of Lists, Sets, Maps, Queues, and Iterators with strict type safety, predictable behavior, and performance transparency. Designed for education, large-scale applications, and library-level reuse, with clean abstractions, extensible contracts, and tree-shakable ESM builds",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"module": "dist/index.js",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
-		},
-		"./ArrayList": {
-			"types": "./dist/ArrayList.d.ts",
-			"import": "./dist/ArrayList.js",
-			"require": "./dist/ArrayList.cjs"
-		},
-		"./LinkedList": {
-			"types": "./dist/LinkedList.d.ts",
-			"import": "./dist/LinkedList.js",
-			"require": "./dist/LinkedList.cjs"
-		},
-		"./HashSet": {
-			"types": "./dist/HashSet.d.ts",
-			"import": "./dist/HashSet.js",
-			"require": "./dist/HashSet.cjs"
-		},
-		"./TreeSet": {
-			"types": "./dist/TreeSet.d.ts",
-			"import": "./dist/TreeSet.js",
-			"require": "./dist/TreeSet.cjs"
-		},
-		"./HashMap": {
-			"types": "./dist/HashMap.d.ts",
-			"import": "./dist/HashMap.js",
-			"require": "./dist/HashMap.cjs"
-		},
-		"./TreeMap": {
-			"types": "./dist/TreeMap.d.ts",
-			"import": "./dist/TreeMap.js",
-			"require": "./dist/TreeMap.cjs"
-		},
-		"./LinkedQueue": {
-			"types": "./dist/LinkedQueue.d.ts",
-			"import": "./dist/LinkedQueue.js",
-			"require": "./dist/LinkedQueue.cjs"
-		},
-		"./PriorityQueue": {
-			"types": "./dist/PriorityQueue.d.ts",
-			"import": "./dist/PriorityQueue.js",
-			"require": "./dist/PriorityQueue.cjs"
-		},
-		"./LinkedDeque": {
-			"types": "./dist/LinkedDeque.d.ts",
-			"import": "./dist/LinkedDeque.js",
-			"require": "./dist/LinkedDeque.cjs"
-		},
-		"./LinkedStack": {
-			"types": "./dist/LinkedStack.d.ts",
-			"import": "./dist/LinkedStack.js",
-			"require": "./dist/LinkedStack.cjs"
-		},
-		"./utils/validation": {
-			"types": "./dist/utils/validation.d.ts",
-			"import": "./dist/utils/validation.js",
-			"require": "./dist/utils/validation.cjs"
-		}
-	},
 	"scripts": {
 		"build": "tsup",
 		"test": "vitest",
