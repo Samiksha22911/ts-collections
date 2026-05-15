@@ -7,6 +7,13 @@ import type { Iterator } from "./Iterator";
  *
  * @template K The type of keys maintained by this map
  * @template V The type of mapped values
+ *
+ * @example
+ * const map = new HashMap<string, number>();
+ * map.put('a', 1); map.put('b', 2);
+ * map.get('a');          // 1
+ * map.containsKey('b');  // true
+ * map.size();            // 2
  */
 export interface Map<K, V> {
   /**
