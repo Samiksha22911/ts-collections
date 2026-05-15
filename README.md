@@ -504,6 +504,10 @@ pnpm docs          # Generate documentation
 
 For detailed guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Examples
+
+Check out runnable examples in the [examples folder](./examples/README.md).
+
 ## 📊 Performance
 
 All data structures document their performance characteristics:
