@@ -1,5 +1,8 @@
 import type { List } from "../interfaces";
-import { AbstractCollection, type TypeValidationOptions } from "./AbstractCollection";
+import {
+  AbstractCollection,
+  type TypeValidationOptions,
+} from "./AbstractCollection";
 
 export type { TypeValidationOptions };
 
@@ -11,7 +14,10 @@ export type { TypeValidationOptions };
  *
  * @template E The type of elements in this list
  */
-export abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
+export abstract class AbstractList<E>
+  extends AbstractCollection<E>
+  implements List<E>
+{
   /**
    * Returns the element at the specified position in this list.
    * Must be implemented by subclasses.

@@ -1,5 +1,8 @@
 import type { Stack } from "../interfaces";
-import { AbstractCollection, type TypeValidationOptions } from "./AbstractCollection";
+import {
+  AbstractCollection,
+  type TypeValidationOptions,
+} from "./AbstractCollection";
 
 export type { TypeValidationOptions };
 
@@ -10,7 +13,10 @@ export type { TypeValidationOptions };
  *
  * @template E The type of elements in this stack
  */
-export abstract class AbstractStack<E> extends AbstractCollection<E> implements Stack<E> {
+export abstract class AbstractStack<E>
+  extends AbstractCollection<E>
+  implements Stack<E>
+{
   constructor(options?: TypeValidationOptions<E>) {
     super(options);
   }

@@ -16,7 +16,8 @@ export type { TypeValidationOptions };
  */
 export abstract class AbstractDeque<E>
   extends AbstractQueue<E>
-  implements Deque<E> {
+  implements Deque<E>
+{
   constructor(options?: TypeValidationOptions<E>) {
     super(options);
   }

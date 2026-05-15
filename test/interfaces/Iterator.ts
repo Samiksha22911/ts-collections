@@ -11,7 +11,7 @@ import type { Iterator } from "../../src/interfaces/Iterator";
  * ```
  */
 export function describeIterator(
-  createIterator: (elements: unknown[]) => Iterator<unknown>
+  createIterator: (elements: unknown[]) => Iterator<unknown>,
 ): void {
   describe("Iterator Interface", () => {
     let iterator: Iterator<number>;

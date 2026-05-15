@@ -26,5 +26,5 @@ while (it2.hasNext()) {
   squares.add(val * val);
 }
 
-console.log('Evens:', evens.toString());
-console.log('Squares:', squares.toString());
+console.log("Evens:", evens.toString());
+console.log("Squares:", squares.toString());

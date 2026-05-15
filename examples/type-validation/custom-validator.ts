@@ -8,12 +8,12 @@ class ValidatedList<T> extends ArrayList<T> {
     this.validator = validator;
   }
 
- override add(value: T): boolean {
-  if (!this.validator(value)) {
-    throw new Error("Validation failed");
+  override add(value: T): boolean {
+    if (!this.validator(value)) {
+      throw new Error("Validation failed");
+    }
+    return super.add(value);
   }
-  return super.add(value);
-}
 }
 
 const evenList = new ValidatedList<number>((num) => num % 2 === 0);

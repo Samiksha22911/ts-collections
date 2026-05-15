@@ -1,7 +1,10 @@
 import type { Iterator } from "../interfaces/Iterator";
 import type { Collection } from "../interfaces/Collection";
 import type { Set } from "../interfaces/Set";
-import { AbstractSet, type TypeValidationOptions } from "../abstracts/AbstractSet";
+import {
+  AbstractSet,
+  type TypeValidationOptions,
+} from "../abstracts/AbstractSet";
 
 /**
  * A hash-based Set implementation using native JavaScript Set.
@@ -20,7 +23,7 @@ import { AbstractSet, type TypeValidationOptions } from "../abstracts/AbstractSe
  * console.log(set.size()); // 2
  * console.log(set.contains(1)); // true
  * set.add("text" as any); // ❌ Throws TypeError (automatic!)
- * 
+ *
  * // Disable type checking if needed
  * const unvalidatedSet = new HashSet<number>({ strict: false });
  * unvalidatedSet.add(1);

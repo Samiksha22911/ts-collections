@@ -21,7 +21,7 @@ export interface Iterator<E> {
    *
    * @throws Error if the iteration has no more elements
    */
-  next(): E ;
+  next(): E;
 
   /**
    * Removes the last element returned by the iterator.

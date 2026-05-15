@@ -156,8 +156,8 @@ describe("Docker Configuration Integration Tests", () => {
     it("should not ignore package-lock.json (needed for npm ci)", () => {
       const content = fs.readFileSync(dockerIgnorePath, "utf-8");
       const lines = content.split("\n");
-      const hasPackageLockIgnore = lines.some((line) =>
-        line.trim() === "package-lock.json"
+      const hasPackageLockIgnore = lines.some(
+        (line) => line.trim() === "package-lock.json",
       );
       expect(hasPackageLockIgnore).toBe(false);
     });
@@ -244,7 +244,9 @@ describe("Docker Configuration Integration Tests", () => {
     it("should have proper commands for build service", () => {
       const content = fs.readFileSync(dockerComposePath, "utf-8");
       // The build service is a special case with nested build: key
-      const buildServiceSection = content.split("# Build service")[1]?.split("# Production service")[0];
+      const buildServiceSection = content
+        .split("# Build service")[1]
+        ?.split("# Production service")[0];
       expect(buildServiceSection).toContain("npm run build");
     });
 
@@ -268,8 +270,12 @@ describe("Docker Configuration Integration Tests", () => {
 
     it("should not have version field (deprecated in Docker Compose v2+)", () => {
       const content = fs.readFileSync(dockerComposePath, "utf-8");
-      const lines = content.split("\n").filter(line => !line.trim().startsWith("#"));
-      const hasVersionField = lines.some(line => line.trim().startsWith("version:"));
+      const lines = content
+        .split("\n")
+        .filter((line) => !line.trim().startsWith("#"));
+      const hasVersionField = lines.some((line) =>
+        line.trim().startsWith("version:"),
+      );
       expect(hasVersionField).toBe(false);
     });
 
@@ -302,7 +308,7 @@ describe("Docker Configuration Integration Tests", () => {
       try {
         const { stdout } = await execAsync(
           `docker build --target development -t ts-collections:dev-test ${projectRoot}`,
-          { timeout: 120000 }
+          { timeout: 120000 },
         );
         expect(stdout).toBeDefined();
       } catch (error: any) {
@@ -320,7 +326,7 @@ describe("Docker Configuration Integration Tests", () => {
       try {
         const { stdout } = await execAsync(
           `docker build --target production -t ts-collections:prod-test ${projectRoot}`,
-          { timeout: 120000 }
+          { timeout: 120000 },
         );
         expect(stdout).toBeDefined();
       } catch (error: any) {
@@ -334,7 +340,8 @@ describe("Docker Configuration Integration Tests", () => {
     it("should not run as root user in production", () => {
       const content = fs.readFileSync(dockerfilePath, "utf-8");
       // Check if USER instruction is present or if we're using non-root base image
-      const hasUserInstruction = content.includes("USER") || content.includes("alpine");
+      const hasUserInstruction =
+        content.includes("USER") || content.includes("alpine");
       expect(hasUserInstruction).toBe(true);
     });
 
@@ -371,7 +378,7 @@ describe("Docker Configuration Integration Tests", () => {
       expect(workdirs).toBeDefined();
 
       // All should be /app
-      workdirs!.forEach(workdir => {
+      workdirs!.forEach((workdir) => {
         expect(workdir).toContain("/app");
       });
     });
@@ -385,9 +392,10 @@ describe("Docker Configuration Integration Tests", () => {
       expect(targets).toBeDefined();
 
       // Check that compose file references these targets
-      const targetNames = targets!.map(t => t.replace("AS ", ""));
-      targetNames.forEach(target => {
-        if (target !== "base") { // base is internal, not referenced in compose
+      const targetNames = targets!.map((t) => t.replace("AS ", ""));
+      targetNames.forEach((target) => {
+        if (target !== "base") {
+          // base is internal, not referenced in compose
           expect(composeContent).toContain(target);
         }
       });
@@ -436,7 +444,11 @@ describe("Docker Configuration Integration Tests", () => {
         if (line.includes("COPY package") && packageCopyIndex === -1) {
           packageCopyIndex = index;
         }
-        if (line.includes("COPY . .") && sourceCopyIndex === -1 && index > packageCopyIndex) {
+        if (
+          line.includes("COPY . .") &&
+          sourceCopyIndex === -1 &&
+          index > packageCopyIndex
+        ) {
           sourceCopyIndex = index;
         }
       });
@@ -459,7 +471,7 @@ describe("Docker Configuration Integration Tests", () => {
 
       // Common files that shouldn't be in Docker image
       const unnecessaryFiles = ["node_modules", "coverage", ".git", "*.md"];
-      unnecessaryFiles.forEach(file => {
+      unnecessaryFiles.forEach((file) => {
         expect(dockerignoreContent).toContain(file);
       });
     });
@@ -491,8 +503,12 @@ describe("Docker Configuration Regression Tests", () => {
     const lines = content.split("\n");
 
     // Count ADD vs COPY - COPY is preferred for local files
-    const addCount = lines.filter(line => line.trim().startsWith("ADD")).length;
-    const copyCount = lines.filter(line => line.trim().startsWith("COPY")).length;
+    const addCount = lines.filter((line) =>
+      line.trim().startsWith("ADD"),
+    ).length;
+    const copyCount = lines.filter((line) =>
+      line.trim().startsWith("COPY"),
+    ).length;
 
     expect(copyCount).toBeGreaterThan(0);
     // ADD should be rare or non-existent (only for URLs or tar extraction)
@@ -503,12 +519,14 @@ describe("Docker Configuration Regression Tests", () => {
     const content = fs.readFileSync(dockerIgnorePath, "utf-8");
 
     // Check that patterns are properly escaped if needed
-    const lines = content.split("\n").filter(line => line.trim() && !line.startsWith("#"));
-    const linesWithWildcards = lines.filter(line => line.includes("*"));
+    const lines = content
+      .split("\n")
+      .filter((line) => line.trim() && !line.startsWith("#"));
+    const linesWithWildcards = lines.filter((line) => line.includes("*"));
 
     // Wildcard patterns should exist and be valid (not escaped unnecessarily)
     expect(linesWithWildcards.length).toBeGreaterThan(0);
-    linesWithWildcards.forEach(line => {
+    linesWithWildcards.forEach((line) => {
       // Should not have backslash escaping in dockerignore patterns
       expect(line).not.toContain("\\*");
     });
@@ -518,8 +536,8 @@ describe("Docker Configuration Regression Tests", () => {
     const content = fs.readFileSync(dockerIgnorePath, "utf-8");
     const lines = content
       .split("\n")
-      .map(line => line.trim())
-      .filter(line => line && !line.startsWith("#"));
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith("#"));
 
     const uniqueLines = new Set(lines);
     // Allow for a small number of duplicates if they exist (less than 10% of total)
@@ -549,7 +567,7 @@ describe("Docker Configuration Boundary Tests", () => {
 
     // WORKDIR should never be empty or root
     const workdirs = content.match(/WORKDIR (.*)/g);
-    workdirs?.forEach(workdir => {
+    workdirs?.forEach((workdir) => {
       const path = workdir.replace("WORKDIR", "").trim();
       expect(path).not.toBe("");
       expect(path).not.toBe("/");
@@ -572,7 +590,9 @@ describe("Docker Configuration Boundary Tests", () => {
     expect(content.length).toBeLessThan(10000); // 10KB limit
 
     // Should have reasonable number of patterns (50 or fewer is good)
-    const lines = content.split("\n").filter(line => line.trim() && !line.startsWith("#"));
+    const lines = content
+      .split("\n")
+      .filter((line) => line.trim() && !line.startsWith("#"));
     expect(lines.length).toBeLessThanOrEqual(50);
   });
 });

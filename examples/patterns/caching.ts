@@ -6,10 +6,10 @@ function expensiveComputation(n: number): number {
   const key = n.toString();
 
   if (cache.containsKey(key)) {
-  console.log('Cache hit:', key);
-  return cache.get(key)!; // non-null assertion
-}
-  console.log('Computing:', key);
+    console.log("Cache hit:", key);
+    return cache.get(key)!; // non-null assertion
+  }
+  console.log("Computing:", key);
 
   const result = n * n;
   cache.put(key, result);

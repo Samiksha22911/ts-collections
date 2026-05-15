@@ -20,29 +20,27 @@ Each example is:
 - ✅ Type-safe
 - ✅ Lint clean
 
-
 ## Directory Structure
 
 examples/
 ├── basics/
-│   ├── list-operations.ts
-│   ├── set-operations.ts
-│   ├── map-operations.ts
-│   ├── queue-operations.ts
-│   └── stack-operations.ts
+│ ├── list-operations.ts
+│ ├── set-operations.ts
+│ ├── map-operations.ts
+│ ├── queue-operations.ts
+│ └── stack-operations.ts
 │
 ├── type-validation/
-│   ├── basic-validation.ts
-│   ├── zod-schema-validation.ts
-│   └── custom-validator.ts
+│ ├── basic-validation.ts
+│ ├── zod-schema-validation.ts
+│ └── custom-validator.ts
 │
 ├── patterns/
-│   ├── filtering-and-mapping.ts
-│   ├── batch-processing.ts
-│   └── caching.ts
+│ ├── filtering-and-mapping.ts
+│ ├── batch-processing.ts
+│ └── caching.ts
 │
 └── README.md
-
 
 ## Quick Start
 
@@ -74,13 +72,13 @@ npx ts-node examples/type-validation/custom-validator.ts
 
 Learn fundamental operations for each collection type.
 
-| Example | Description |
-|---|---|
-| `list-operations.ts` | ArrayList operations: add, remove, iterate |
-| `set-operations.ts` | Unique collections and membership checks |
-| `map-operations.ts` | Key-value storage and retrieval |
-| `queue-operations.ts` | FIFO operations with queues |
-| `stack-operations.ts` | LIFO operations with stacks |
+| Example               | Description                                |
+| --------------------- | ------------------------------------------ |
+| `list-operations.ts`  | ArrayList operations: add, remove, iterate |
+| `set-operations.ts`   | Unique collections and membership checks   |
+| `map-operations.ts`   | Key-value storage and retrieval            |
+| `queue-operations.ts` | FIFO operations with queues                |
+| `stack-operations.ts` | LIFO operations with stacks                |
 
 ---
 
@@ -88,11 +86,11 @@ Learn fundamental operations for each collection type.
 
 Learn how to validate data before inserting into collections.
 
-| Example | Description |
-|---|---|
-| `basic-validation.ts` | Manual validation logic |
+| Example                    | Description                |
+| -------------------------- | -------------------------- |
+| `basic-validation.ts`      | Manual validation logic    |
 | `zod-schema-validation.ts` | Schema validation with Zod |
-| `custom-validator.ts` | Custom reusable validators |
+| `custom-validator.ts`      | Custom reusable validators |
 
 ---
 
@@ -100,11 +98,11 @@ Learn how to validate data before inserting into collections.
 
 Real-world practical usage patterns.
 
-| Example | Description |
-|---|---|
+| Example                    | Description                           |
+| -------------------------- | ------------------------------------- |
 | `filtering-and-mapping.ts` | Functional collection transformations |
-| `batch-processing.ts` | Process queue items in batches |
-| `caching.ts` | Cache frequently used values |
+| `batch-processing.ts`      | Process queue items in batches        |
+| `caching.ts`               | Cache frequently used values          |
 
 ---
 
@@ -132,7 +130,6 @@ Real-world practical usage patterns.
 - Batch processing
 - Caching
 
-
 ## Recommended Learning Order
 
 If you're new to `ts-collections`, follow this order:
@@ -140,7 +137,6 @@ If you're new to `ts-collections`, follow this order:
 1. `basics/`
 2. `type-validation/`
 3. `patterns/`
-
 
 ## Common Commands
 

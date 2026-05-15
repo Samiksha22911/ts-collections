@@ -92,14 +92,14 @@ Map<K,V> (Interface)
 
 ## 📊 Interface Contract Matrix
 
-| Interface | Key Methods | Abstract | Concrete |
-|-----------|-----------|----------|----------|
-| **Iterator** | hasNext(), next(), remove?() | ✅ | ❌ |
-| **Collection** | add(), remove(), contains(), size(), iterator(), toArray(), addAll(), removeAll(), retainAll(), containsAll(), clear(), isEmpty() | ✅ | ❌ |
-| **List** | get(), set(), addAt(), removeAt(), indexOf(), lastIndexOf(), subList() | ✅ | ❌ |
-| **Set** | (extends Collection) - guarantees uniqueness | ✅ | ❌ |
-| **Map** | put(), get(), remove(), keys(), values(), entries(), putAll() | ✅ | ❌ |
-| **Queue** | offer(), dequeue(), poll(), element(), peek() | ✅ | ❌ |
+| Interface      | Key Methods                                                                                                                       | Abstract | Concrete |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------- | -------- |
+| **Iterator**   | hasNext(), next(), remove?()                                                                                                      | ✅       | ❌       |
+| **Collection** | add(), remove(), contains(), size(), iterator(), toArray(), addAll(), removeAll(), retainAll(), containsAll(), clear(), isEmpty() | ✅       | ❌       |
+| **List**       | get(), set(), addAt(), removeAt(), indexOf(), lastIndexOf(), subList()                                                            | ✅       | ❌       |
+| **Set**        | (extends Collection) - guarantees uniqueness                                                                                      | ✅       | ❌       |
+| **Map**        | put(), get(), remove(), keys(), values(), entries(), putAll()                                                                     | ✅       | ❌       |
+| **Queue**      | offer(), dequeue(), poll(), element(), peek()                                                                                     | ✅       | ❌       |
 
 ## 🧩 Method Resolution Order (MRO)
 
@@ -117,9 +117,11 @@ ArrayList<E>
 ```
 
 **Method Resolution:**
+
 1. ArrayList (if defined) → Abstract List → AbstractCollection → Interface
 
 **Example:**
+
 ```
 ArrayList.add(element)
 → AbstractList.add(element)     // Delegates to addAt()
@@ -388,6 +390,7 @@ User Code
 ---
 
 This architecture provides:
+
 - ✅ **Clarity** - Clear hierarchy and responsibility
 - ✅ **Reusability** - Common code in abstract classes
 - ✅ **Testability** - Factory-based test suites
@@ -395,7 +398,7 @@ This architecture provides:
 - ✅ **Type Safety** - Full TypeScript support
 - ✅ **Maintainability** - SOLID principles throughout
 
-##  Runtime Type Validation Architecture (NEW)
+## Runtime Type Validation Architecture (NEW)
 
 Zod-based validation system integrated as core functionality:
 

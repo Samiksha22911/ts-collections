@@ -12,4 +12,3 @@ export default defineConfig({
   splitting: true,
   outDir: "dist",
 });
-

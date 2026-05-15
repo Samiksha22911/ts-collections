@@ -1,5 +1,8 @@
 import type { Set } from "../interfaces";
-import { AbstractCollection, type TypeValidationOptions } from "./AbstractCollection";
+import {
+  AbstractCollection,
+  type TypeValidationOptions,
+} from "./AbstractCollection";
 
 export type { TypeValidationOptions };
 
@@ -10,7 +13,10 @@ export type { TypeValidationOptions };
  *
  * @template E The type of elements in this set
  */
-export abstract class AbstractSet<E> extends AbstractCollection<E> implements Set<E> {
+export abstract class AbstractSet<E>
+  extends AbstractCollection<E>
+  implements Set<E>
+{
   /**
    * Returns true if this set contains the specified element.
    * Must be implemented by subclasses.

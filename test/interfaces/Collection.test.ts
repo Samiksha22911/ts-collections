@@ -11,7 +11,7 @@ import type { Collection } from "../../src/interfaces/Collection";
  * ```
  */
 export function describeCollection(
-  createCollection: () => Collection<number>
+  createCollection: () => Collection<number>,
 ): void {
   describe("Collection Interface", () => {
     let collection: Collection<number>;

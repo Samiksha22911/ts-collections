@@ -1,7 +1,10 @@
 import type { Iterator } from "../interfaces/Iterator";
 import type { Stack } from "../interfaces/Stack";
 import { LinkedList } from "../list/LinkedList";
-import { AbstractStack, type TypeValidationOptions } from "../abstracts/AbstractStack";
+import {
+  AbstractStack,
+  type TypeValidationOptions,
+} from "../abstracts/AbstractStack";
 
 /**
  * A linked list-based Stack implementation with LIFO semantics.

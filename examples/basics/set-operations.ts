@@ -14,4 +14,4 @@ while (it.hasNext()) {
 }
 
 set.remove(1);
-console.log('Size:', set.size());
+console.log("Size:", set.size());

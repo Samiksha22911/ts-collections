@@ -33,7 +33,8 @@ import type { Map as MapInterface } from "../interfaces/Map";
  */
 export class HashMap<K, V>
   extends AbstractMap<K, V>
-  implements MapInterface<K, V> {
+  implements MapInterface<K, V>
+{
   private mapEntries: globalThis.Map<K, V>;
 
   constructor(options?: MapTypeValidationOptions<K, V>) {

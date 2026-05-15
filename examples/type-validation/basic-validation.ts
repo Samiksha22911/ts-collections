@@ -1,8 +1,8 @@
 import { ArrayList } from "ts-collections";
 
 function validateNumber(value: any): number {
-  if (typeof value !== 'number') {
-    throw new Error('Value must be a number');
+  if (typeof value !== "number") {
+    throw new Error("Value must be a number");
   }
   return value;
 }

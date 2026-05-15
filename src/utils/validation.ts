@@ -1,4 +1,4 @@
-import { z, type ZodSchema, ZodError } from 'zod';
+import { z, type ZodSchema, ZodError } from "zod";
 
 /**
  * Result type for validation operations
@@ -34,7 +34,7 @@ export interface ValidationIssue {
  */
 export function validateSafe<T>(
   schema: ZodSchema<T>,
-  data: unknown
+  data: unknown,
 ): ValidationResult<T> {
   try {
     const validated = schema.parse(data);
@@ -45,8 +45,8 @@ export function validateSafe<T>(
         success: false,
         error: {
           message: error.message,
-          issues: error.issues.map(issue => ({
-            path: issue.path.join('.'),
+          issues: error.issues.map((issue) => ({
+            path: issue.path.join("."),
             message: issue.message,
             code: issue.code,
           })),
@@ -57,7 +57,7 @@ export function validateSafe<T>(
     return {
       success: false,
       error: {
-        message: 'Unknown validation error',
+        message: "Unknown validation error",
         issues: [],
         rawError: error instanceof Error ? error : new Error(String(error)),
       },
@@ -76,11 +76,11 @@ export function formatValidationError(error: ValidationError): string {
   }
 
   const issueMessages = error.issues
-    .map(issue => {
-      const path = issue.path ? `${issue.path}: ` : '';
+    .map((issue) => {
+      const path = issue.path ? `${issue.path}: ` : "";
       return `${path}${issue.message}`;
     })
-    .join('; ');
+    .join("; ");
 
   return `Validation failed: ${issueMessages}`;
 }
@@ -90,21 +90,25 @@ export function formatValidationError(error: ValidationError): string {
  * @param schema The Zod schema
  * @returns A validator function that throws on invalid data
  */
-export function createValidator<T>(schema: ZodSchema<T>): (value: unknown) => T {
+export function createValidator<T>(
+  schema: ZodSchema<T>,
+): (value: unknown) => T {
   return (value: unknown): T => {
     try {
       return schema.parse(value);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new TypeError(formatValidationError({
-          message: error.message,
-          issues: error.issues.map(issue => ({
-            path: issue.path.join('.'),
-            message: issue.message,
-            code: issue.code,
-          })),
-          rawError: error,
-        }));
+        throw new TypeError(
+          formatValidationError({
+            message: error.message,
+            issues: error.issues.map((issue) => ({
+              path: issue.path.join("."),
+              message: issue.message,
+              code: issue.code,
+            })),
+            rawError: error,
+          }),
+        );
       }
       throw error;
     }
@@ -118,7 +122,7 @@ export function createValidator<T>(schema: ZodSchema<T>): (value: unknown) => T 
  * @returns A validator function that validates against any of the schemas
  */
 export function createUnionValidator<T>(
-  schemas: ZodSchema<T>[]
+  schemas: ZodSchema<T>[],
 ): (value: unknown) => T {
   const unionSchema = z.union(schemas as [ZodSchema<T>, ...ZodSchema<T>[]]);
   return createValidator(unionSchema);
@@ -130,23 +134,29 @@ export function createUnionValidator<T>(
  * @returns A string description of the schema
  */
 export function getSchemaDescription(schema: ZodSchema<unknown>): string {
-  const schemaWithDef = schema as ZodSchema<unknown> & { _def?: { typeName?: string } };
+  const schemaWithDef = schema as ZodSchema<unknown> & {
+    _def?: { typeName?: string };
+  };
   if (schema instanceof z.ZodObject) {
-    const schemaObject = schema as ZodSchema<unknown> & { _shape?: Record<string, unknown> };
+    const schemaObject = schema as ZodSchema<unknown> & {
+      _shape?: Record<string, unknown>;
+    };
     const shape = schemaObject._shape;
-    if (!shape) return 'object { }';
+    if (!shape) return "object { }";
 
     const fields = Object.entries(shape)
       .map(([key, value]) => {
-        const fieldSchema = value as ZodSchema<unknown> & { _def?: { typeName?: string } };
-        return `${key}: ${fieldSchema._def?.typeName || 'unknown'}`;
+        const fieldSchema = value as ZodSchema<unknown> & {
+          _def?: { typeName?: string };
+        };
+        return `${key}: ${fieldSchema._def?.typeName || "unknown"}`;
       })
-      .join(', ');
+      .join(", ");
     return `object { ${fields} }`;
   }
 
   const def = schemaWithDef._def;
-  return def?.typeName || 'unknown';
+  return def?.typeName || "unknown";
 }
 
 /**
@@ -168,7 +178,7 @@ export type SchemaType<T extends ZodSchema<any>> = z.infer<T>;
  */
 export function createTransformingValidator<T, U>(
   schema: ZodSchema<T>,
-  transform?: (value: T) => U
+  transform?: (value: T) => U,
 ): (value: unknown) => U {
   return (value: unknown): U => {
     const validated = schema.parse(value) as T;

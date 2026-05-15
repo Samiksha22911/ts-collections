@@ -24,8 +24,8 @@ import {
   type MapTypeValidationOptions,
   type ValidationResult,
   type ValidationError,
-} from 'ts-collections';
-import { z } from 'zod';
+} from "ts-collections";
+import { z } from "zod";
 ```
 
 ## Quick Examples
@@ -34,22 +34,22 @@ import { z } from 'zod';
 
 ```typescript
 const numbers = new ArrayList<number>({
-  schema: z.number().int().positive()
+  schema: z.number().int().positive(),
 });
 
-numbers.add(42);   // ✓
-numbers.add(-1);   // ✗ Throws TypeError
+numbers.add(42); // ✓
+numbers.add(-1); // ✗ Throws TypeError
 ```
 
 ### HashSet with Enum
 
 ```typescript
-const statuses = new HashSet<'active' | 'inactive'>({
-  schema: z.enum(['active', 'inactive'])
+const statuses = new HashSet<"active" | "inactive">({
+  schema: z.enum(["active", "inactive"]),
 });
 
-statuses.add('active');   // ✓
-statuses.add('unknown');  // ✗ Throws TypeError
+statuses.add("active"); // ✓
+statuses.add("unknown"); // ✗ Throws TypeError
 ```
 
 ### HashMap with Keys and Values
@@ -57,21 +57,21 @@ statuses.add('unknown');  // ✗ Throws TypeError
 ```typescript
 const products = new HashMap<string, number>({
   keySchema: z.string().min(1),
-  valueSchema: z.number().positive()
+  valueSchema: z.number().positive(),
 });
 
-products.put('apple', 1.99);    // ✓
-products.put('banana', -5);     // ✗ Throws TypeError
+products.put("apple", 1.99); // ✓
+products.put("banana", -5); // ✗ Throws TypeError
 ```
 
 ### LinkedQueue
 
 ```typescript
 const queue = new LinkedQueue<Task>({
-  schema: TaskSchema
+  schema: TaskSchema,
 });
 
-queue.offer(validTask);   // ✓
+queue.offer(validTask); // ✓
 queue.offer(invalidTask); // ✗ Throws TypeError
 ```
 
@@ -80,17 +80,17 @@ queue.offer(invalidTask); // ✗ Throws TypeError
 ```typescript
 const deque = new LinkedDeque<string>();
 
-deque.addFirst('middle');
-deque.addFirst('front');
-deque.addLast('back');
+deque.addFirst("middle");
+deque.addFirst("front");
+deque.addLast("back");
 
-deque.push('top');
+deque.push("top");
 deque.pop(); // 'top'
 
-deque.removeFirstOccurrence('middle');
+deque.removeFirstOccurrence("middle");
 
 deque.pollFirst(); // 'front'
-deque.pollLast();  // 'back'
+deque.pollLast(); // 'back'
 ```
 
 ### PriorityQueue
@@ -109,15 +109,15 @@ queue.peek(); // 3
 
 ```typescript
 const map = new TreeMap<string, number>();
-map.put('c', 3);
-map.put('a', 1);
-map.put('b', 2);
+map.put("c", 3);
+map.put("a", 1);
+map.put("b", 2);
 
 map.keys(); // ['a', 'b', 'c']
-map.firstKey();   // 'a'
-map.higherKey('a'); // 'b'
+map.firstKey(); // 'a'
+map.higherKey("a"); // 'b'
 
-map.headMap('c').entries(); // [['a', 1], ['b', 2]]
+map.headMap("c").entries(); // [['a', 1], ['b', 2]]
 ```
 
 ### TreeSet
@@ -129,7 +129,7 @@ set.add(1);
 set.add(2);
 
 set.toArray(); // [1, 2, 3]
-set.floor(2);  // 2
+set.floor(2); // 2
 set.higher(2); // 3
 
 const descending = set.descendingIterator();
@@ -143,11 +143,11 @@ const descending = set.descendingIterator();
 const schema = z.object({
   id: z.number().int().positive(),
   name: z.string().min(1).max(100),
-  email: z.string().email()
+  email: z.string().email(),
 });
 
 const items = new ArrayList<z.infer<typeof schema>>({
-  schema
+  schema,
 });
 ```
 
@@ -156,7 +156,7 @@ const items = new ArrayList<z.infer<typeof schema>>({
 ```typescript
 const schema = z.array(z.string().min(1).max(20)).min(1).max(10);
 const tags = new ArrayList<string[]>({
-  schema
+  schema,
 });
 ```
 
@@ -164,21 +164,21 @@ const tags = new ArrayList<string[]>({
 
 ```typescript
 const schema = z.union([
-  z.object({ type: z.literal('email'), to: z.string().email() }),
-  z.object({ type: z.literal('sms'), phone: z.string() })
+  z.object({ type: z.literal("email"), to: z.string().email() }),
+  z.object({ type: z.literal("sms"), phone: z.string() }),
 ]);
 
 const items = new ArrayList<z.infer<typeof schema>>({
-  schema
+  schema,
 });
 ```
 
 ### Discriminated Unions
 
 ```typescript
-const schema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('email'), to: z.string().email() }),
-  z.object({ type: z.literal('sms'), phone: z.string() })
+const schema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("email"), to: z.string().email() }),
+  z.object({ type: z.literal("sms"), phone: z.string() }),
 ]);
 ```
 
@@ -190,9 +190,9 @@ const schema = z.discriminatedUnion('type', [
 const result = validateSafe(schema, data);
 
 if (result.success) {
-  console.log('Valid:', result.data);
+  console.log("Valid:", result.data);
 } else {
-  console.log('Error:', formatValidationError(result.error));
+  console.log("Error:", formatValidationError(result.error));
 }
 ```
 
@@ -208,11 +208,7 @@ const email = validateEmail(userInput);
 ### Union Validators
 
 ```typescript
-const validate = createUnionValidator([
-  z.string(),
-  z.number(),
-  z.boolean()
-]);
+const validate = createUnionValidator([z.string(), z.number(), z.boolean()]);
 
 const value = validate(input); // Works with any of the types
 ```
@@ -220,10 +216,10 @@ const value = validate(input); // Works with any of the types
 ### Transform and Validate
 
 ```typescript
-const schema = z.string().transform(str => str.toUpperCase());
+const schema = z.string().transform((str) => str.toUpperCase());
 const validator = createTransformingValidator(schema);
 
-const result = validator('hello'); // Returns 'HELLO'
+const result = validator("hello"); // Returns 'HELLO'
 ```
 
 ## Validation Strategies
@@ -241,23 +237,23 @@ new ArrayList<T>({
 ```typescript
 new ArrayList<number>({
   typeValidator: (val) => {
-    return typeof val === 'number' && val > 0;
-  }
-})
+    return typeof val === "number" && val > 0;
+  },
+});
 ```
 
 ### Strategy 3: Strict Type
 
 ```typescript
 new ArrayList<string>({
-  strictType: true
-})
+  strictType: true,
+});
 ```
 
 ### Strategy 4: No Validation
 
 ```typescript
-new ArrayList<T>()
+new ArrayList<T>();
 ```
 
 ## Error Messages
@@ -292,13 +288,13 @@ try {
 ```typescript
 const UserSchema = z.object({
   id: z.number(),
-  name: z.string()
+  name: z.string(),
 });
 
 type User = z.infer<typeof UserSchema>;
 
 const users = new ArrayList<User>({
-  schema: UserSchema
+  schema: UserSchema,
 });
 ```
 
@@ -306,7 +302,7 @@ const users = new ArrayList<User>({
 
 ```typescript
 const options: TypeValidationOptions<number> = {
-  schema: z.number().positive()
+  schema: z.number().positive(),
 };
 
 const list = new ArrayList<number>(options);
@@ -317,7 +313,7 @@ const list = new ArrayList<number>(options);
 ```typescript
 const options: MapTypeValidationOptions<string, number> = {
   keySchema: z.string(),
-  valueSchema: z.number()
+  valueSchema: z.number(),
 };
 
 const map = new HashMap<string, number>(options);
@@ -326,6 +322,7 @@ const map = new HashMap<string, number>(options);
 ## Best Practices
 
 ✅ **DO:**
+
 - Use Zod schemas in production
 - Define schemas at module level
 - Use `z.infer` for types
@@ -333,6 +330,7 @@ const map = new HashMap<string, number>(options);
 - Test validation edge cases
 
 ❌ **DON'T:**
+
 - Create schemas in loops
 - Mix validation strategies
 - Ignore validation errors
@@ -342,6 +340,7 @@ const map = new HashMap<string, number>(options);
 ## Performance Tips
 
 1. **Validate before collection**
+
    ```typescript
    // Better: validate once
    const validated = validateSafe(schema, data);
@@ -351,18 +350,20 @@ const map = new HashMap<string, number>(options);
    ```
 
 2. **Use strictType for simple types**
+
    ```typescript
    // Faster for simple cases
    const list = new ArrayList<number>({
-     strictType: true
+     strictType: true,
    });
    ```
 
 3. **Reuse validators**
+
    ```typescript
    // Create once
    const validator = createValidator(schema);
-   
+
    // Use many times
    for (const item of items) {
      validator(item);
@@ -374,55 +375,55 @@ const map = new HashMap<string, number>(options);
 ### Email
 
 ```typescript
-z.string().email()
+z.string().email();
 ```
 
 ### UUID
 
 ```typescript
-z.string().uuid()
+z.string().uuid();
 ```
 
 ### URL
 
 ```typescript
-z.string().url()
+z.string().url();
 ```
 
 ### Positive Integer
 
 ```typescript
-z.number().int().positive()
+z.number().int().positive();
 ```
 
 ### Non-empty String
 
 ```typescript
-z.string().min(1)
+z.string().min(1);
 ```
 
 ### Optional Field
 
 ```typescript
-z.string().optional()
+z.string().optional();
 ```
 
 ### Default Value
 
 ```typescript
-z.string().default('default')
+z.string().default("default");
 ```
 
 ### Array with Constraints
 
 ```typescript
-z.array(z.string()).min(1).max(10)
+z.array(z.string()).min(1).max(10);
 ```
 
 ### Enum
 
 ```typescript
-z.enum(['active', 'inactive', 'pending'])
+z.enum(["active", "inactive", "pending"]);
 ```
 
 ## Getting Help

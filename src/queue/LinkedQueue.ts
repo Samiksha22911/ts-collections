@@ -1,6 +1,9 @@
 import type { Iterator } from "../interfaces/Iterator";
 import type { Queue } from "../interfaces/Queue";
-import { AbstractQueue, type TypeValidationOptions } from "../abstracts/AbstractQueue";
+import {
+  AbstractQueue,
+  type TypeValidationOptions,
+} from "../abstracts/AbstractQueue";
 
 /**
  * A linked list-based Queue implementation.
@@ -19,7 +22,7 @@ import { AbstractQueue, type TypeValidationOptions } from "../abstracts/Abstract
  * console.log(queue.dequeue()); // 1
  * console.log(queue.size()); // 1
  * queue.offer("text" as any); // ❌ Throws TypeError (automatic!)
- * 
+ *
  * // Disable type checking if needed
  * const unvalidatedQueue = new LinkedQueue<number>({ strict: false });
  * unvalidatedQueue.offer(1);

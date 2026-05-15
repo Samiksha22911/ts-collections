@@ -10,6 +10,7 @@
 **ts-collections** is a fully-typed, Java-inspired Collections Framework for TypeScript providing industry-grade implementations of Lists, Sets, Maps, Queues, and Iterators with strict type safety, predictable behavior, and performance transparency.
 
 ### Key Metadata
+
 - **Version:** 1.0.0
 - **License:** MIT
 - **Repository:** https://github.com/Karelaking/ts-collections
@@ -24,6 +25,7 @@
 ## 🏗️ Architecture
 
 ### Core Structure
+
 ```
 src/
 ├── abstracts/        (5 abstract base classes)
@@ -67,6 +69,7 @@ src/
 ```
 
 ### Class Hierarchy
+
 ```
 Collection<E> (Interface)
 ├── List<E> → AbstractList<E> → [ArrayList, LinkedList]
@@ -85,21 +88,24 @@ Iterator<E> (Interface) - standalone
 ## 📊 Current Implementation Status
 
 ### Collections Implemented
-| Type | Class | Status | Test Coverage |
-|------|-------|--------|---|
-| **List** | ArrayList | ✅ Complete | Full |
-| **List** | LinkedList | ✅ Complete | Full |
-| **Set** | HashSet | ✅ Complete | Full |
-| **Map** | HashMap | ✅ Complete | Full |
-| **Queue** | LinkedQueue | ✅ Complete | Full |
-| **Stack** | LinkedStack | ✅ Complete | Full |
+
+| Type      | Class       | Status      | Test Coverage |
+| --------- | ----------- | ----------- | ------------- |
+| **List**  | ArrayList   | ✅ Complete | Full          |
+| **List**  | LinkedList  | ✅ Complete | Full          |
+| **Set**   | HashSet     | ✅ Complete | Full          |
+| **Map**   | HashMap     | ✅ Complete | Full          |
+| **Queue** | LinkedQueue | ✅ Complete | Full          |
+| **Stack** | LinkedStack | ✅ Complete | Full          |
 
 ### Test Status
+
 - **Total Test Files:** 14
 - **Total Tests:** 332/332 passing ✅
 - **Coverage:** All public interfaces and implementations
 
 ### Source Statistics
+
 - **Total Source Files:** 24
 - **Interfaces:** 7
 - **Abstract Classes:** 6
@@ -111,6 +117,7 @@ Iterator<E> (Interface) - standalone
 ## 🔧 Configuration Files
 
 ### Build & Packaging
+
 - **tsconfig.json** - TypeScript configuration
 - **tsup.config.ts** - Build configuration
 - **vitest.config.ts** - Test runner config
@@ -118,6 +125,7 @@ Iterator<E> (Interface) - standalone
 - **package.json** - Project metadata & scripts
 
 ### Documentation
+
 - **README.md** - Main project documentation
 - **ARCHITECTURE.md** - Detailed architecture guide
 - **CONTRIBUTING.md** - Contribution guidelines
@@ -126,11 +134,12 @@ Iterator<E> (Interface) - standalone
 - **PROJECT_SETUP.md** - Development setup
 
 ### GitHub Automation
+
 - **.github/ISSUE_TEMPLATE/** (4 templates - recently updated)
-  - bug_report.md *(updated 2026-01-27)*
-  - feature_request.md *(updated 2026-01-27)*
-  - documentation.md *(updated 2026-01-27)*
-  - question.md *(updated 2026-01-27)*
+  - bug_report.md _(updated 2026-01-27)_
+  - feature_request.md _(updated 2026-01-27)_
+  - documentation.md _(updated 2026-01-27)_
+  - question.md _(updated 2026-01-27)_
   - config.yml - Issue template config
 
 - **.github/workflows/** (5 workflows)
@@ -138,31 +147,33 @@ Iterator<E> (Interface) - standalone
   - duplicate-issue-detector.yml
   - greetings.yml
   - pr-template.yml
-  - issue-template-guard.yml *(added 2026-01-27)*
-  - unassign-inactive.yml *(added 2026-01-27)*
+  - issue-template-guard.yml _(added 2026-01-27)_
+  - unassign-inactive.yml _(added 2026-01-27)_
 
 ---
 
 ## 🛠️ NPM Scripts
 
-| Command | Purpose |
-|---------|---------|
-| `npm run build` | Compile TypeScript → dist/ using tsup |
-| `npm test` | Run all tests with Vitest |
-| `npm run lint` | Lint src/ with ESLint |
-| `npm run docs` | Generate TypeDoc documentation |
-| `npm run bench` | Run performance benchmarks |
-| `npm run prepublishOnly` | Auto-build before publish (npm) |
+| Command                  | Purpose                               |
+| ------------------------ | ------------------------------------- |
+| `npm run build`          | Compile TypeScript → dist/ using tsup |
+| `npm test`               | Run all tests with Vitest             |
+| `npm run lint`           | Lint src/ with ESLint                 |
+| `npm run docs`           | Generate TypeDoc documentation        |
+| `npm run bench`          | Run performance benchmarks            |
+| `npm run prepublishOnly` | Auto-build before publish (npm)       |
 
 ---
 
 ## 📦 Dependencies
 
 ### Runtime
+
 - **zod** (4.3.5) - Schema validation
 - **path** (0.12.7) - Path utilities
 
 ### DevDependencies
+
 - **TypeScript** (5.9.3) - Language
 - **Vitest** (4.0.17) - Testing framework
 - **tsup** (8.5.1) - Build bundler
@@ -177,12 +188,14 @@ Iterator<E> (Interface) - standalone
 ## 🔄 Recent Changes & Updates (Session)
 
 ### Issue Templates (2026-01-27)
+
 - **Updated** bug_report.md - Added collection scope, minimal reproduction, environment context
 - **Updated** feature_request.md - Focused on problem, proposal, usage example, compatibility
 - **Updated** documentation.md - Structured around location, issue type, audience, suggested change
 - **Updated** question.md - Added resource checklist, version info, context fields
 
 ### Workflows Added (2026-01-27)
+
 - **issue-template-guard.yml** - Validates issues have required sections, applies `needs-template` label
 - **unassign-inactive.yml** - Daily scheduled task to unassign users inactive >14 days, leaves courtesy comment
 
@@ -204,6 +217,7 @@ Iterator<E> (Interface) - standalone
 ## 📝 Code Standards (from .github/copilot-instructions.md)
 
 ### Naming Conventions
+
 - **Variables/Functions:** camelCase
 - **Classes/Interfaces:** PascalCase
 - **Constants:** UPPER_SNAKE_CASE
@@ -211,6 +225,7 @@ Iterator<E> (Interface) - standalone
 - **Directories:** PascalCase
 
 ### Development Practices
+
 - TDD approach for new features/fixes
 - DRY principles - avoid duplication
 - SOLID design patterns
@@ -249,14 +264,14 @@ npm publish             # Auto-builds then publishes
 ✅ Type safety working (Zod integration)  
 ✅ Issue templates optimized  
 ✅ GitHub automation workflows in place  
-✅ Development environment ready  
+✅ Development environment ready
 
 ---
 
 **Next Steps to Consider:**
+
 - Monitor new issue template adoption via `issue-template-guard.yml` workflow
 - Test `unassign-inactive.yml` on stale assignments
 - Add more specialized queue implementations (PriorityQueue, Deque)
 - Performance optimization pass with benchmark data
 - Wiki/documentation site deployment
-

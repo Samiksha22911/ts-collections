@@ -1,5 +1,8 @@
 import type { Queue } from "../interfaces";
-import { AbstractCollection, type TypeValidationOptions } from "./AbstractCollection";
+import {
+  AbstractCollection,
+  type TypeValidationOptions,
+} from "./AbstractCollection";
 
 export type { TypeValidationOptions };
 
@@ -11,7 +14,10 @@ export type { TypeValidationOptions };
  *
  * @template E The type of elements in this queue
  */
-export abstract class AbstractQueue<E> extends AbstractCollection<E> implements Queue<E> {
+export abstract class AbstractQueue<E>
+  extends AbstractCollection<E>
+  implements Queue<E>
+{
   /**
    * Inserts the specified element into the queue if it is possible to do so.
    * Must be implemented by subclasses.

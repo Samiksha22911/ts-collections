@@ -84,7 +84,9 @@ describe("README.md Documentation Tests", () => {
     let dockerSection: string;
 
     beforeAll(() => {
-      const dockerMatch = readmeContent.match(/##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i);
+      const dockerMatch = readmeContent.match(
+        /##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i,
+      );
       dockerSection = dockerMatch ? dockerMatch[0] : "";
     });
 
@@ -168,8 +170,8 @@ describe("README.md Documentation Tests", () => {
       expect(codeBlocks!.length).toBeGreaterThan(5);
 
       // Check that examples have imports
-      const hasImports = codeBlocks!.some(block =>
-        block.includes("import") && block.includes("from")
+      const hasImports = codeBlocks!.some(
+        (block) => block.includes("import") && block.includes("from"),
       );
       expect(hasImports).toBe(true);
     });
@@ -285,7 +287,9 @@ describe("README.md Documentation Tests", () => {
 
   describe("Contributing Guidelines", () => {
     it("should explain how to contribute", () => {
-      const contributingMatch = readmeContent.match(/##\s+.*[Cc]ontribut[\s\S]*?(?=##|$)/);
+      const contributingMatch = readmeContent.match(
+        /##\s+.*[Cc]ontribut[\s\S]*?(?=##|$)/,
+      );
       expect(contributingMatch).toBeDefined();
     });
 
@@ -298,7 +302,9 @@ describe("README.md Documentation Tests", () => {
     });
 
     it("should mention testing requirements", () => {
-      const contributingSection = readmeContent.match(/##\s+.*[Cc]ontribut[\s\S]*?(?=##|$)/);
+      const contributingSection = readmeContent.match(
+        /##\s+.*[Cc]ontribut[\s\S]*?(?=##|$)/,
+      );
       if (contributingSection) {
         expect(contributingSection[0]).toMatch(/test/i);
       }
@@ -333,7 +339,7 @@ describe("README.md Documentation Tests", () => {
       expect(headers).toBeDefined();
       expect(headers!.length).toBeGreaterThan(10);
 
-      headers!.forEach(header => {
+      headers!.forEach((header) => {
         const level = header.match(/^(#+)/)?.[1].length || 0;
         expect(level).toBeGreaterThan(0);
         expect(level).toBeLessThan(7);
@@ -367,7 +373,7 @@ describe("README.md Documentation Tests", () => {
 
     it("should cover all main data structures", () => {
       const structures = ["ArrayList", "HashSet", "HashMap", "Queue"];
-      structures.forEach(structure => {
+      structures.forEach((structure) => {
         expect(readmeContent).toContain(structure);
       });
     });
@@ -403,7 +409,7 @@ describe("README.md Documentation Tests", () => {
     it("should not have broken links to local files", () => {
       const localLinks = readmeContent.match(/\[([^\]]+)\]\(([^):/]+\.md)\)/g);
       if (localLinks) {
-        localLinks.forEach(link => {
+        localLinks.forEach((link) => {
           const filename = link.match(/\(([^)]+)\)/)?.[1];
           if (filename && !filename.startsWith("http")) {
             // Check if file is mentioned as existing
@@ -426,7 +432,7 @@ describe("README.md Documentation Tests", () => {
 
     it("should not have trailing whitespace", () => {
       const lines = readmeContent.split("\n");
-      const linesWithTrailing = lines.filter(line => line.match(/\s+$/));
+      const linesWithTrailing = lines.filter((line) => line.match(/\s+$/));
       expect(linesWithTrailing.length).toBeLessThan(10);
     });
   });
@@ -443,7 +449,9 @@ describe("README.md Documentation Tests", () => {
 
     it("should explain basic usage before advanced features", () => {
       const advancedIndex = readmeContent.toLowerCase().indexOf("advanced");
-      const quickStartIndex = readmeContent.toLowerCase().indexOf("quick start");
+      const quickStartIndex = readmeContent
+        .toLowerCase()
+        .indexOf("quick start");
 
       if (advancedIndex > -1 && quickStartIndex > -1) {
         expect(quickStartIndex).toBeLessThan(advancedIndex);
@@ -482,16 +490,18 @@ describe("README.md Documentation Tests", () => {
     it("should not have duplicate headers", () => {
       const headers = readmeContent.match(/^##\s+(.+)$/gm);
       if (headers) {
-        const headerTexts = headers.map(h => h.toLowerCase().trim());
+        const headerTexts = headers.map((h) => h.toLowerCase().trim());
         const uniqueHeaders = new Set(headerTexts);
         expect(uniqueHeaders.size).toBe(headerTexts.length);
       }
     });
 
     it("should use consistent package name", () => {
-      const packageNames = readmeContent.match(/ts-collections|ts_collections|tscollections/gi);
+      const packageNames = readmeContent.match(
+        /ts-collections|ts_collections|tscollections/gi,
+      );
       if (packageNames) {
-        packageNames.forEach(name => {
+        packageNames.forEach((name) => {
           expect(name.toLowerCase()).toBe("ts-collections");
         });
       }
@@ -500,9 +510,11 @@ describe("README.md Documentation Tests", () => {
     it("should use consistent code style in examples", () => {
       const codeBlocks = readmeContent.match(/```typescript[\s\S]*?```/g);
       if (codeBlocks) {
-        codeBlocks.forEach(block => {
+        codeBlocks.forEach((block) => {
           // Should use semicolons consistently
-          const lines = block.split("\n").filter(l => l.trim() && !l.includes("//"));
+          const lines = block
+            .split("\n")
+            .filter((l) => l.trim() && !l.includes("//"));
           if (lines.length > 2) {
             expect(block).toBeTruthy();
           }
@@ -515,7 +527,7 @@ describe("README.md Documentation Tests", () => {
     it("should have alt text for images", () => {
       const images = readmeContent.match(/!\[([^\]]*)\]/g);
       if (images) {
-        images.forEach(img => {
+        images.forEach((img) => {
           const altText = img.match(/!\[([^\]]*)\]/)?.[1];
           expect(altText).toBeDefined();
         });
@@ -525,7 +537,7 @@ describe("README.md Documentation Tests", () => {
     it("should use descriptive link text", () => {
       const links = readmeContent.match(/\[([^\]]+)\]/g);
       if (links) {
-        links.forEach(link => {
+        links.forEach((link) => {
           const text = link.match(/\[([^\]]+)\]/)?.[1];
           expect(text).toBeDefined();
           expect(text!.length).toBeGreaterThan(1);
@@ -552,8 +564,13 @@ describe("README.md Documentation Tests", () => {
 
   describe("SEO and Discoverability", () => {
     it("should have relevant keywords", () => {
-      const keywords = ["TypeScript", "collections", "data structures", "library"];
-      keywords.forEach(keyword => {
+      const keywords = [
+        "TypeScript",
+        "collections",
+        "data structures",
+        "library",
+      ];
+      keywords.forEach((keyword) => {
         expect(readmeContent.toLowerCase()).toContain(keyword.toLowerCase());
       });
     });
@@ -566,20 +583,29 @@ describe("README.md Documentation Tests", () => {
 
   describe("Docker Section Completeness", () => {
     it("should list all docker-compose services", () => {
-      const dockerSection = readmeContent.match(/##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i)?.[0] || "";
+      const dockerSection =
+        readmeContent.match(
+          /##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i,
+        )?.[0] || "";
       const services = ["dev", "test", "lint", "build", "prod"];
-      services.forEach(service => {
+      services.forEach((service) => {
         expect(dockerSection).toContain(service);
       });
     });
 
     it("should explain volume mounts", () => {
-      const dockerSection = readmeContent.match(/##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i)?.[0] || "";
+      const dockerSection =
+        readmeContent.match(
+          /##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i,
+        )?.[0] || "";
       expect(dockerSection).toMatch(/volume|mount/i);
     });
 
     it("should explain image targets", () => {
-      const dockerSection = readmeContent.match(/##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i)?.[0] || "";
+      const dockerSection =
+        readmeContent.match(
+          /##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i,
+        )?.[0] || "";
       expect(dockerSection).toMatch(/target|stage/i);
     });
   });
@@ -592,13 +618,13 @@ describe("README.md Documentation Tests", () => {
 
     it("should not have excessively long lines", () => {
       const lines = readmeContent.split("\n");
-      const longLines = lines.filter(line => line.length > 200);
+      const longLines = lines.filter((line) => line.length > 200);
       expect(longLines.length).toBeLessThan(50);
     });
 
     it("should not have excessive nesting in lists", () => {
       const lines = readmeContent.split("\n");
-      lines.forEach(line => {
+      lines.forEach((line) => {
         const indentation = line.match(/^(\s*)/)?.[1].length || 0;
         expect(indentation).toBeLessThan(20);
       });
@@ -611,7 +637,7 @@ describe("README.md Documentation Tests", () => {
       // If it mentions a year, it should be recent
       const yearMatches = readmeContent.match(/20\d{2}/g);
       if (yearMatches) {
-        yearMatches.forEach(year => {
+        yearMatches.forEach((year) => {
           const yearNum = parseInt(year);
           expect(yearNum).toBeGreaterThanOrEqual(currentYear - 2);
         });
@@ -635,7 +661,9 @@ describe("README Docker Documentation Quality", () => {
 
   beforeAll(() => {
     readmeContent = fs.readFileSync(readmePath, "utf-8");
-    const dockerMatch = readmeContent.match(/##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i);
+    const dockerMatch = readmeContent.match(
+      /##\s+[^\n]*Docker[^\n]*[\s\S]*?(?=\n##\s+[^#]|$)/i,
+    );
     dockerSection = dockerMatch ? dockerMatch[0] : "";
   });
 

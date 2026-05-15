@@ -130,7 +130,10 @@ export interface Map<K, V> {
    * @param mappingFunction Function to compute a value
    * @returns Current (existing or computed) value associated with key, or undefined
    */
-  computeIfAbsent(key: K, mappingFunction: (key: K) => V | undefined): V | undefined;
+  computeIfAbsent(
+    key: K,
+    mappingFunction: (key: K) => V | undefined,
+  ): V | undefined;
 
   /**
    * If the value for the specified key is present, attempts to compute a new mapping

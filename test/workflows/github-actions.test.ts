@@ -60,7 +60,9 @@ describe("GitHub Actions Workflow Tests", () => {
 
     it("should trigger on push to master", () => {
       expect(workflowContent).toContain("push:");
-      const pushSection = workflowContent.split("push:")[1]?.split(/\n\s{0,2}\w+:/)[0];
+      const pushSection = workflowContent
+        .split("push:")[1]
+        ?.split(/\n\s{0,2}\w+:/)[0];
       expect(pushSection).toContain("master");
     });
 
@@ -78,16 +80,18 @@ describe("GitHub Actions Workflow Tests", () => {
         ".dockerignore",
         "package*.json",
         "src/**",
-        "test/**"
+        "test/**",
       ];
 
-      pathPatterns.forEach(pattern => {
+      pathPatterns.forEach((pattern) => {
         expect(workflowContent).toContain(pattern);
       });
     });
 
     it("should target master branch for pull requests", () => {
-      const prSection = workflowContent.split("pull_request:")[1]?.split(/\n\s{0,2}\w+:/)[0];
+      const prSection = workflowContent
+        .split("pull_request:")[1]
+        ?.split(/\n\s{0,2}\w+:/)[0];
       expect(prSection).toContain("master");
     });
 
@@ -115,7 +119,9 @@ describe("GitHub Actions Workflow Tests", () => {
     });
 
     it("should not have write permissions unless necessary", () => {
-      const permissionsSection = workflowContent.split("permissions:")[1]?.split(/\n\w+:/)[0];
+      const permissionsSection = workflowContent
+        .split("permissions:")[1]
+        ?.split(/\n\w+:/)[0];
       expect(permissionsSection).not.toContain("write");
     });
   });
@@ -147,7 +153,7 @@ describe("GitHub Actions Workflow Tests", () => {
       const actions = workflowContent.match(/uses: (\S+)/g);
       expect(actions).toBeDefined();
 
-      actions!.forEach(action => {
+      actions!.forEach((action) => {
         // Should use either actions/* or docker/* namespaces
         expect(action).toMatch(/uses: (actions|docker)\//);
       });
@@ -157,7 +163,7 @@ describe("GitHub Actions Workflow Tests", () => {
       const actions = workflowContent.match(/uses: \S+@(\S+)/g);
       expect(actions).toBeDefined();
 
-      actions!.forEach(action => {
+      actions!.forEach((action) => {
         // Should have version specified
         expect(action).toMatch(/@v\d+/);
       });
@@ -187,14 +193,16 @@ describe("GitHub Actions Workflow Tests", () => {
 
     it("should not push images by default", () => {
       const buildSteps = workflowContent.split("docker/build-push-action");
-      buildSteps.slice(1).forEach(step => {
+      buildSteps.slice(1).forEach((step) => {
         const stepContent = step.split(/\n\s+-\s+name:/)[0];
         expect(stepContent).toContain("push: false");
       });
     });
 
     it("should load images for testing", () => {
-      const devBuildSection = workflowContent.split("Build development image")[1]?.split("- name:")[0];
+      const devBuildSection = workflowContent
+        .split("Build development image")[1]
+        ?.split("- name:")[0];
       expect(devBuildSection).toContain("load: true");
     });
 
@@ -266,7 +274,7 @@ describe("GitHub Actions Workflow Tests", () => {
       const dockerRunCommands = workflowContent.match(/docker run[^\n]+/g);
       expect(dockerRunCommands).toBeDefined();
 
-      dockerRunCommands!.forEach(cmd => {
+      dockerRunCommands!.forEach((cmd) => {
         expect(cmd).toContain("--rm");
       });
     });
@@ -288,7 +296,7 @@ describe("GitHub Actions Workflow Tests", () => {
       expect(steps).toBeDefined();
       expect(steps!.length).toBeGreaterThan(5);
 
-      steps!.forEach(step => {
+      steps!.forEach((step) => {
         const name = step.replace("- name:", "").trim();
         expect(name.length).toBeGreaterThan(5);
       });
@@ -302,9 +310,9 @@ describe("GitHub Actions Workflow Tests", () => {
 
     it("should use proper indentation (2 spaces)", () => {
       const lines = workflowContent.split("\n");
-      const indentedLines = lines.filter(line => line.match(/^\s+\S/));
+      const indentedLines = lines.filter((line) => line.match(/^\s+\S/));
 
-      indentedLines.forEach(line => {
+      indentedLines.forEach((line) => {
         const indent = line.match(/^(\s+)/)?.[1].length || 0;
         // Should be multiple of 2
         expect(indent % 2).toBe(0);
@@ -347,10 +355,12 @@ describe("GitHub Actions Workflow Tests", () => {
     });
 
     it("should use --rm flag with docker compose", () => {
-      const composeCommands = workflowContent.match(/docker compose run[^\n]+/g);
+      const composeCommands = workflowContent.match(
+        /docker compose run[^\n]+/g,
+      );
       expect(composeCommands).toBeDefined();
 
-      composeCommands!.forEach(cmd => {
+      composeCommands!.forEach((cmd) => {
         expect(cmd).toContain("--rm");
       });
     });
@@ -366,17 +376,23 @@ describe("GitHub Actions Workflow Tests", () => {
     it("should fail workflow if tests fail", () => {
       // By default, if any step fails, workflow fails
       // Check that we don't have continue-on-error for test steps
-      const testSection = workflowContent.split("Run tests in Docker")[1]?.split("- name:")[0];
+      const testSection = workflowContent
+        .split("Run tests in Docker")[1]
+        ?.split("- name:")[0];
       expect(testSection).not.toContain("continue-on-error: true");
     });
 
     it("should fail workflow if linter fails", () => {
-      const lintSection = workflowContent.split("Run linter in Docker")[1]?.split("- name:")[0];
+      const lintSection = workflowContent
+        .split("Run linter in Docker")[1]
+        ?.split("- name:")[0];
       expect(lintSection).not.toContain("continue-on-error: true");
     });
 
     it("should fail workflow if build fails", () => {
-      const buildSection = workflowContent.split("Build development image")[1]?.split("- name:")[0];
+      const buildSection = workflowContent
+        .split("Build development image")[1]
+        ?.split("- name:")[0];
       expect(buildSection).not.toContain("continue-on-error: true");
     });
   });
@@ -419,7 +435,9 @@ describe("GitHub Actions Workflow Tests", () => {
       expect(workflowContent).toContain("paths:");
 
       // Count paths to ensure we're filtering appropriately
-      const pathsSection = workflowContent.split("paths:")[1]?.split(/\n\s{0,4}\w+:/)[0];
+      const pathsSection = workflowContent
+        .split("paths:")[1]
+        ?.split(/\n\s{0,4}\w+:/)[0];
       const pathCount = (pathsSection?.match(/- /g) || []).length;
       expect(pathCount).toBeGreaterThan(3);
     });
@@ -436,7 +454,7 @@ describe("GitHub Actions Workflow Tests", () => {
       const actions = workflowContent.match(/uses: [^\n]+/g);
       expect(actions).toBeDefined();
 
-      actions!.forEach(action => {
+      actions!.forEach((action) => {
         // Should have @vX or @commit-hash
         expect(action).toMatch(/@\w+/);
       });
@@ -472,7 +490,9 @@ describe("GitHub Actions Workflow Tests", () => {
 
     it("should handle workflow_dispatch without inputs", () => {
       // workflow_dispatch should work even without inputs
-      const dispatchSection = workflowContent.split("workflow_dispatch")[1]?.split(/\n\w+:/)[0];
+      const dispatchSection = workflowContent
+        .split("workflow_dispatch")[1]
+        ?.split(/\n\w+:/)[0];
       // Should not have required inputs
       expect(dispatchSection).not.toContain("required: true");
     });
@@ -485,7 +505,9 @@ describe("GitHub Actions Workflow Tests", () => {
 
     it("should handle missing Docker images", () => {
       // Verify step should handle when images don't exist
-      const verifySection = workflowContent.split("Verify production image")[1]?.split("- name:")[0];
+      const verifySection = workflowContent
+        .split("Verify production image")[1]
+        ?.split("- name:")[0];
       expect(verifySection).toContain("docker images");
     });
   });
@@ -509,9 +531,11 @@ describe("GitHub Actions Workflow Tests", () => {
       const stepNames = workflowContent.match(/- name: (.+)/g);
       expect(stepNames).toBeDefined();
 
-      stepNames!.forEach(name => {
+      stepNames!.forEach((name) => {
         // Step names should be descriptive
-        expect(name.toLowerCase()).toMatch(/(checkout|setup|build|run|test|verify)/);
+        expect(name.toLowerCase()).toMatch(
+          /(checkout|setup|build|run|test|verify)/,
+        );
       });
     });
   });
@@ -527,14 +551,16 @@ describe("GitHub Actions Workflow Tests", () => {
       const steps = workflowContent.match(/- name: (.+)/g);
       expect(steps).toBeDefined();
 
-      const stepNames = steps!.map(s => s.replace("- name:", "").trim());
+      const stepNames = steps!.map((s) => s.replace("- name:", "").trim());
       const uniqueSteps = new Set(stepNames);
       expect(uniqueSteps.size).toBe(stepNames.length);
     });
 
     it("should not have conflicting trigger conditions", () => {
       // Check that paths are consistent across triggers
-      const prPaths = workflowContent.split("pull_request:")[1]?.split("push:")[0];
+      const prPaths = workflowContent
+        .split("pull_request:")[1]
+        ?.split("push:")[0];
       const pushPaths = workflowContent.split("push:")[1]?.split(/\n\w+:/)[0];
 
       if (prPaths?.includes("paths:") && pushPaths?.includes("paths:")) {
@@ -556,7 +582,7 @@ describe("GitHub Actions Workflow Tests", () => {
       const tags = workflowContent.match(/tags: (.+)/g);
       expect(tags).toBeDefined();
 
-      tags!.forEach(tag => {
+      tags!.forEach((tag) => {
         expect(tag).toContain("ts-collections");
       });
     });
@@ -564,7 +590,7 @@ describe("GitHub Actions Workflow Tests", () => {
     it("should have reasonable line formatting", () => {
       const lines = workflowContent.split("\n");
       // Check that most lines don't have excessive trailing whitespace
-      const linesWithTrailingSpace = lines.filter(line => line.match(/\s+$/));
+      const linesWithTrailingSpace = lines.filter((line) => line.match(/\s+$/));
       // Allow some trailing whitespace but not excessive
       expect(linesWithTrailingSpace.length).toBeLessThan(lines.length * 0.5);
     });

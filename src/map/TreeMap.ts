@@ -21,7 +21,8 @@ export interface TreeMapOptions<K, V> extends MapTypeValidationOptions<K, V> {
  */
 export class TreeMap<K, V>
   extends AbstractMap<K, V>
-  implements NavigableMap<K, V> {
+  implements NavigableMap<K, V>
+{
   private readonly comparator: (a: K, b: K) => number;
   private readonly orderedEntries: Array<[K, V]> = [];
 
