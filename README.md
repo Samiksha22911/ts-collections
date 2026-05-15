@@ -133,7 +133,11 @@ graph TD
 ## 📦 Installation
 
 ```bash
-npm install ts-collections
+npm i @karelaking/ts-collections
+```
+
+```bash
+pnpm i @karelaking/ts-collections
 ```
 
 <details>

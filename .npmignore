@@ -11,6 +11,7 @@ wiki/
 .git/
 .gitignore
 .dockerignore
+.npmrc
 eslint.config.js
 tsconfig.json
 tsup.config.ts
@@ -30,6 +31,10 @@ QUICKSTART.md
 QUICK_REFERENCE.md
 AGENTS.md
 PRD.md
+CONTRIBUTING.md
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+SECURITY.md
 
 # Development and build artifacts
 node_modules/
@@ -37,6 +42,8 @@ pnpm-lock.yaml
 package-lock.json
 *.tsbuildinfo
 graphify-out/
+ts-collections-*.tgz
+run-tests.js
 
 # IDE and OS files
 .idea/
