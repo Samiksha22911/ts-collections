@@ -7,6 +7,13 @@ import type { Queue } from "./Queue";
  * This interface mirrors Java's Deque semantics while remaining TypeScript-friendly.
  *
  * @template E The type of elements in this deque
+ *
+ * @example
+ * const deque = new LinkedDeque<number>();
+ * deque.addFirst(1); deque.addLast(2);
+ * deque.peekFirst(); // 1
+ * deque.peekLast();  // 2
+ * deque.pollFirst(); // 1 (removed)
  */
 export interface Deque<E> extends Queue<E> {
   /**

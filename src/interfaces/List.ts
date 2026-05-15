@@ -5,6 +5,13 @@ import type { Collection } from "./Collection";
  * Lists typically allow duplicate elements and access by index.
  *
  * @template E The type of elements in this list
+ *
+ * @example
+ * const list = new ArrayList<string>();
+ * list.add('a'); list.add('b'); list.add('c');
+ * list.get(0);      // 'a'
+ * list.indexOf('b'); // 1
+ * list.subList(0, 2).toArray(); // ['a', 'b']
  */
 export interface List<E> extends Collection<E> {
   /**
