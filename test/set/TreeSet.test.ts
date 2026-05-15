@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { TreeSet } from "../../src/set/TreeSet";
-import { describeSet } from "../interfaces/Set.test";
+import { describeSet } from "../interfaces/Set";
 
 // Run shared Set interface tests
 describeSet(() => new TreeSet<number>());

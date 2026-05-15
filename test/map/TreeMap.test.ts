@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { TreeMap } from "../../src/map/TreeMap";
-import { describeMap } from "../interfaces/Map.test";
+import { describeMap } from "../interfaces/Map";
 
 // Run shared Map interface tests
 describeMap(() => new TreeMap<string, number>());

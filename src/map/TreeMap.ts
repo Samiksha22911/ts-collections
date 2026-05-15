@@ -413,6 +413,14 @@ export class TreeMap<K, V>
   }
 
   private readonly defaultComparator = (a: K, b: K): number => {
+    // Handle null and undefined
+    if (a === null && b === null) return 0;
+    if (a === null) return -1;
+    if (b === null) return 1;
+    if (a === undefined && b === undefined) return 0;
+    if (a === undefined) return -1;
+    if (b === undefined) return 1;
+
     if (typeof a === "number" && typeof b === "number") {
       return a - b;
     }

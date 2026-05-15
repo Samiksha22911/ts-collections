@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { LinkedDeque } from "../../src/queue/LinkedDeque";
-import { describeDeque } from "../interfaces/Deque.test";
+import { describeDeque } from "../interfaces/Deque";
 
 // Run shared Deque interface tests
 describeDeque(() => new LinkedDeque<number>());

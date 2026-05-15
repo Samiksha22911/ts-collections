@@ -61,7 +61,6 @@ export class ArrayList<T> extends AbstractList<T> implements List<T> {
    * @returns true if the element was added successfully
    */
   override add(element: T): boolean {
-    this.validateElementType(element);
     this.elements.push(element);
     return true;
   }
@@ -74,11 +73,7 @@ export class ArrayList<T> extends AbstractList<T> implements List<T> {
    */
   override get(index: number): T {
     this.checkIndex(index);
-    const element = this.elements[index];
-    if (element === undefined) {
-      throw new Error(`Element at index ${index} is undefined`);
-    }
-    return element;
+    return this.elements[index] as T;
   }
 
   /**
@@ -90,13 +85,9 @@ export class ArrayList<T> extends AbstractList<T> implements List<T> {
    */
   override set(index: number, element: T): T {
     this.checkIndex(index);
-    this.validateElementType(element);
     const oldElement = this.elements[index];
-    if (oldElement === undefined) {
-      throw new Error(`Element at index ${index} is undefined`);
-    }
     this.elements[index] = element;
-    return oldElement;
+    return oldElement as T;
   }
 
   /**
@@ -110,7 +101,6 @@ export class ArrayList<T> extends AbstractList<T> implements List<T> {
     if (index < 0 || index > this.elements.length) {
       throw new Error(`Index out of bounds: ${index}`);
     }
-    this.validateElementType(element);
     this.elements.splice(index, 0, element);
   }
 
@@ -123,12 +113,8 @@ export class ArrayList<T> extends AbstractList<T> implements List<T> {
    */
   override removeAt(index: number): T {
     this.checkIndex(index);
-    const removed = this.elements.splice(index, 1);
-    const element = removed[0];
-    if (element === undefined) {
-      throw new Error(`Failed to remove element at index ${index}`);
-    }
-    return element;
+    const [removed] = this.elements.splice(index, 1);
+    return removed as T;
   }
 
   /**
@@ -215,7 +201,7 @@ export class ArrayList<T> extends AbstractList<T> implements List<T> {
         if (element === undefined) {
           throw new Error("No more elements");
         }
-        return element;
+        return element as T   ;
       },
     };
   }
