@@ -16,15 +16,18 @@ class ValidatedList<T> extends ArrayList<T> {
   }
 }
 
-const evenList = new ValidatedList<number>((num) => num % 2 === 0);
+describe("ValidatedList", () => {
+  test("should accept valid even numbers", () => {
+    const evenList = new ValidatedList<number>((num) => num % 2 === 0);
 
-evenList.add(2);
-evenList.add(4);
+    expect(() => evenList.add(2)).not.toThrow();
+    expect(() => evenList.add(4)).not.toThrow();
+  });
 
-console.log("Added valid numbers successfully");
+  test("should throw validation error for invalid values", () => {
+    const evenList = new ValidatedList<number>((num) => num % 2 === 0);
 
-try {
-  evenList.add(3);
-} catch (error) {
-  console.log("Error:", (error as Error).message);
-}
+    expect(() => evenList.add(3)).toThrow("Validation failed");
+    expect(() => evenList.add(5)).toThrow("Validation failed");
+  });
+});

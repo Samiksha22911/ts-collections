@@ -9,10 +9,21 @@ function validate(n: number) {
   return schema.parse(n);
 }
 
-list.add(validate(10));
+describe("Zod validation", () => {
+  test("should accept positive numbers", () => {
+    expect(() => list.add(validate(10))).not.toThrow();
+    expect(list.size()).toBe(1);
+  });
 
-try {
-  list.add(validate(-5));
-} catch (e: any) {
-  console.log("Validation error:", e.message);
-}
+  test("should throw error for negative numbers", () => {
+    expect(() => validate(-5)).toThrow();
+  });
+
+  test("should contain proper zod error message", () => {
+    try {
+      validate(-5);
+    } catch (e: any) {
+      expect(e.message).toContain("positive");
+    }
+  });
+});

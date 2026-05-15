@@ -7,9 +7,19 @@ function validateNumber(value: any): number {
   return value;
 }
 
-const list = new ArrayList<number>();
+describe("Basic Number Validation", () => {
+  test("should allow valid numbers", () => {
+    const list = new ArrayList<number>();
 
-list.add(validateNumber(10));
-list.add(validateNumber(20));
+    expect(() => list.add(validateNumber(10))).not.toThrow();
+    expect(() => list.add(validateNumber(20))).not.toThrow();
 
-console.log(list.size());
+    expect(list.size()).toBe(2);
+  });
+
+  test("should throw error for invalid type", () => {
+    expect(() => validateNumber("10")).toThrow("Value must be a number");
+    expect(() => validateNumber(null)).toThrow("Value must be a number");
+    expect(() => validateNumber(undefined)).toThrow("Value must be a number");
+  });
+});
